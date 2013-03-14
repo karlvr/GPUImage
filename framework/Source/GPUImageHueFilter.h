@@ -1,9 +1,9 @@
 
-#import "GPUImageFilter.h"
+#import "GPUImageHSBFilter.h"
 
-@interface GPUImageHueFilter : GPUImageFilter
+@interface GPUImageHueFilter : GPUImageHSBFilter
 {
-    GLfloat hueAdjustUniform;
+    
     
 }
 @property (nonatomic, readwrite) CGFloat hue;
