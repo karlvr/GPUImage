@@ -98,26 +98,26 @@
 
 - (void)startProcessing
 {
-    if(self.url == nil)
-    {
-      [self processAsset];
-      return;
-    }
-    
     if (_shouldRepeat) keepLooping = YES;
     
     previousFrameTime = kCMTimeZero;
     previousActualFrameTime = CFAbsoluteTimeGetCurrent();
   
-    NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-    AVURLAsset *inputAsset = [[AVURLAsset alloc] initWithURL:self.url options:inputOptions];
+    AVAsset *inputAsset;
+    if(self.url)
+    {
+        NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+        inputAsset = [[AVURLAsset alloc] initWithURL:self.url options:inputOptions];
+    } else {
+        inputAsset = self.asset;
+    }
     
     GPUImageMovie __block *blockSelf = self;
     
     [inputAsset loadValuesAsynchronouslyForKeys:[NSArray arrayWithObject:@"tracks"] completionHandler: ^{
         NSError *error = nil;
         AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
-        if (!tracksStatus == AVKeyValueStatusLoaded) 
+        if (tracksStatus != AVKeyValueStatusLoaded)
         {
             return;
         }
