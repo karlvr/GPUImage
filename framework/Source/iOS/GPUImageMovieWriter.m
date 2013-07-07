@@ -273,7 +273,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 
 - (void)finishRecording;
 {
-    [self finishRecordingWithCompletionHandler:nil];
+    [self finishRecordingWithCompletionHandler:NULL];
 }
 
 - (void)finishRecordingWithCompletionHandler:(void (^)(void))handler;
