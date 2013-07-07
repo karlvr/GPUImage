@@ -119,6 +119,7 @@
         AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
         if (tracksStatus != AVKeyValueStatusLoaded)
         {
+            [blockSelf cancelProcessing];
             return;
         }
         blockSelf.asset = inputAsset;
@@ -157,7 +158,8 @@
 
     if ([reader startReading] == NO) 
     {
-            NSLog(@"Error reading from file at URL: %@", weakSelf.url);
+        NSLog(@"Error reading from file at URL: %@", weakSelf.url);
+        [self cancelProcessing];
         return;
     }
         
