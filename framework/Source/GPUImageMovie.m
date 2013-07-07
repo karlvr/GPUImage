@@ -184,7 +184,7 @@
 
         }
 
-        if (reader.status == AVAssetWriterStatusCompleted) {
+        if (reader.status == AVAssetReaderStatusCompleted) {
                 
             [reader cancelReading];
 
@@ -248,7 +248,7 @@
     }
     else if (synchronizedMovieWriter != nil)
     {
-        if (reader.status == AVAssetWriterStatusCompleted) 
+        if (reader.status == AVAssetReaderStatusCompleted)
         {
             [self endProcessing];
         }
