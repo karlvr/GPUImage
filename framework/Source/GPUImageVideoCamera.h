@@ -79,6 +79,15 @@
  */
 - (id)initWithSessionPreset:(NSString *)sessionPreset cameraPosition:(AVCaptureDevicePosition)cameraPosition;
 
+/** Add audio capture to the session. Use this if you are going to set the audioEncodingTarget later when you don't
+ want to wait for the devices to be configured.
+ */
+- (void)addAudioInputsAndOutputs;
+
+/** Remove the audio capture inputs and outputs from this session.
+ */
+- (void)removeAudioInputsAndOutputs;
+
 /** Tear down the capture session
  */
 - (void)removeInputsAndOutputs;
