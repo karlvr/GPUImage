@@ -154,6 +154,8 @@
         AVAssetTrack* audioTrack = [audioTracks objectAtIndex:0];
         readerAudioTrackOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:audioTrack outputSettings:nil];
         [reader addOutput:readerAudioTrackOutput];
+    } else {
+        audioEncodingIsFinished = YES;
     }
 
     if ([reader startReading] == NO) 
@@ -169,6 +171,10 @@
             [weakSelf readNextVideoFrameFromOutput:readerVideoTrackOutput];
             if (weakSelf->videoEncodingIsFinished) {
                 *finished = YES;
+                
+                if (weakSelf->audioEncodingIsFinished) {
+                    [weakSelf endProcessing];
+                }
             }
         }];
 
@@ -176,6 +182,10 @@
             [weakSelf readNextAudioSampleFromOutput:readerAudioTrackOutput];
             if (weakSelf->audioEncodingIsFinished) {
                 *finished = YES;
+                
+                if (weakSelf->videoEncodingIsFinished) {
+                    [weakSelf endProcessing];
+                }
             }
         }];
 
@@ -183,13 +193,15 @@
     }
     else
     {
-        while (reader.status == AVAssetReaderStatusReading && (!_shouldRepeat || keepLooping))
+        while (reader.status == AVAssetReaderStatusReading && (!_shouldRepeat || keepLooping) && !(videoEncodingIsFinished && audioEncodingIsFinished))
         {
+            if (!videoEncodingIsFinished) {
                 [weakSelf readNextVideoFrameFromOutput:readerVideoTrackOutput];
+            }
 
             if ( (shouldRecordAudioTrack) && (!audioEncodingIsFinished) )
             {
-                    [weakSelf readNextAudioSampleFromOutput:readerAudioTrackOutput];
+                [weakSelf readNextAudioSampleFromOutput:readerAudioTrackOutput];
             }
 
         }
@@ -257,17 +269,7 @@
         {
             if (!keepLooping) {
                 videoEncodingIsFinished = YES;
-                [self endProcessing];
             }
-        }
-    }
-    else if (synchronizedMovieWriter != nil)
-    {
-        videoEncodingIsFinished = YES;
-        
-        if (reader.status == AVAssetReaderStatusCompleted)
-        {
-            [self endProcessing];
         }
     }
     else
