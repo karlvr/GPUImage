@@ -138,6 +138,8 @@
     // Maybe set alwaysCopiesSampleData to NO on iOS 5.0 for faster video decoding
     AVAssetReaderTrackOutput *readerVideoTrackOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[[self.asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0] outputSettings:outputSettings];
     [reader addOutput:readerVideoTrackOutput];
+    
+    videoEncodingIsFinished = NO;
 
     NSArray *audioTracks = [self.asset tracksWithMediaType:AVMediaTypeAudio];
     BOOL shouldRecordAudioTrack = (([audioTracks count] > 0) && (weakSelf.audioEncodingTarget != nil) );
@@ -161,12 +163,18 @@
         
     if (synchronizedMovieWriter != nil)
     {
-        [synchronizedMovieWriter setVideoInputReadyCallback:^{
+        [synchronizedMovieWriter setVideoInputReadyCallback:^(BOOL *finished) {
             [weakSelf readNextVideoFrameFromOutput:readerVideoTrackOutput];
+            if (weakSelf->videoEncodingIsFinished) {
+                *finished = YES;
+            }
         }];
 
-        [synchronizedMovieWriter setAudioInputReadyCallback:^{
+        [synchronizedMovieWriter setAudioInputReadyCallback:^(BOOL *finished) {
             [weakSelf readNextAudioSampleFromOutput:readerAudioTrackOutput];
+            if (weakSelf->audioEncodingIsFinished) {
+                *finished = YES;
+            }
         }];
 
         [synchronizedMovieWriter enableSynchronizationCallbacks];
@@ -206,6 +214,11 @@
 
 - (void)readNextVideoFrameFromOutput:(AVAssetReaderTrackOutput *)readerVideoTrackOutput;
 {
+    if (videoEncodingIsFinished)
+    {
+        return;
+    }
+    
     if (reader.status == AVAssetReaderStatusReading)
     {
         CMSampleBufferRef sampleBufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
@@ -248,10 +261,16 @@
     }
     else if (synchronizedMovieWriter != nil)
     {
+        videoEncodingIsFinished = YES;
+        
         if (reader.status == AVAssetReaderStatusCompleted)
         {
             [self endProcessing];
         }
+    }
+    else
+    {
+        videoEncodingIsFinished = YES;
     }
 }
 
@@ -394,8 +413,8 @@
     
     if (synchronizedMovieWriter != nil)
     {
-        [synchronizedMovieWriter setVideoInputReadyCallback:^{}];
-        [synchronizedMovieWriter setAudioInputReadyCallback:^{}];
+        [synchronizedMovieWriter setVideoInputReadyCallback:^(BOOL *finished) {}];
+        [synchronizedMovieWriter setAudioInputReadyCallback:^(BOOL *finished) {}];
     }
 }
 

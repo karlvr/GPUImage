@@ -41,8 +41,8 @@ extern NSString *const kGPUImageColorSwizzlingFragmentShaderString;
 @property(nonatomic, copy) void(^failureBlock)(NSError*);
 @property(nonatomic, assign) id<GPUImageMovieWriterDelegate> delegate;
 @property(readwrite, nonatomic) BOOL encodingLiveVideo;
-@property(nonatomic, copy) void(^videoInputReadyCallback)(void);
-@property(nonatomic, copy) void(^audioInputReadyCallback)(void);
+@property(nonatomic, copy) void(^videoInputReadyCallback)(BOOL *finished);
+@property(nonatomic, copy) void(^audioInputReadyCallback)(BOOL *finished);
 @property(nonatomic) BOOL enabled;
 
 // Initialization and teardown

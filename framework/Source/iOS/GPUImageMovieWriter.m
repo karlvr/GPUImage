@@ -32,6 +32,8 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     CMTime startTime, previousFrameTime;
     
     BOOL isRecording;
+    
+    BOOL videoFinished, audioFinished;
 }
 
 // Movie recording
@@ -286,8 +288,14 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 
     isRecording = NO;
     runOnMainQueueWithoutDeadlocking(^{
-        [assetWriterVideoInput markAsFinished];
-        [assetWriterAudioInput markAsFinished];
+            if (!videoFinished) {
+                [assetWriterVideoInput markAsFinished];
+                videoFinished = YES;
+            }
+            if (!audioFinished) {
+                [assetWriterAudioInput markAsFinished];
+                audioFinished = YES;
+            }
 #if (!defined(__IPHONE_6_0) || (__IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_6_0))
         // Not iOS 6 SDK
         [assetWriter finishWriting];
@@ -350,17 +358,41 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 
 - (void)enableSynchronizationCallbacks;
 {
+    [assetWriter startWriting];
+    
     if (videoInputReadyCallback != NULL)
     {
-        [assetWriter startWriting];
-        [assetWriterVideoInput requestMediaDataWhenReadyOnQueue:[GPUImageContext sharedContextQueue] usingBlock:videoInputReadyCallback];
+        [assetWriterVideoInput requestMediaDataWhenReadyOnQueue:[GPUImageContext sharedContextQueue] usingBlock:^{
+            BOOL finished = NO;
+            while ([assetWriterVideoInput isReadyForMoreMediaData]) {
+                videoInputReadyCallback(&finished);
+                if (finished) {
+                    if (!videoFinished) {
+                        [assetWriterVideoInput markAsFinished];
+                        videoFinished = YES;
+                    }
+                    break;
+                }
+            }
+        }];
     }
     
     if (audioInputReadyCallback != NULL)
     {
-        [assetWriterAudioInput requestMediaDataWhenReadyOnQueue:[GPUImageContext sharedContextQueue] usingBlock:audioInputReadyCallback];
-    }        
-    
+        [assetWriterAudioInput requestMediaDataWhenReadyOnQueue:[GPUImageContext sharedContextQueue] usingBlock:^{
+            BOOL finished = NO;
+            while ([assetWriterAudioInput isReadyForMoreMediaData]) {
+                audioInputReadyCallback(&finished);
+                if (finished) {
+                    if (!audioFinished) {
+                        [assetWriterAudioInput markAsFinished];
+                        audioFinished = YES;
+                    }
+                    break;
+                }
+            }
+        }];
+    }
 }
 
 #pragma mark -
