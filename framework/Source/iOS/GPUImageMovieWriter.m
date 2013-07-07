@@ -342,7 +342,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
         }
         
         CFRetain(audioBuffer);
-        dispatch_async(movieWritingQueue, ^{
+        dispatch_sync(movieWritingQueue, ^{
             if (assetWriterAudioInput.readyForMoreMediaData)
             {
                 if (![assetWriterAudioInput appendSampleBuffer:audioBuffer]) {

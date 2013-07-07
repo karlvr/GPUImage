@@ -830,7 +830,11 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 {
     if (captureOutput == audioOutput)
     {
-        [self processAudioSampleBuffer:sampleBuffer];
+        CFRetain(sampleBuffer);
+        runAsynchronouslyOnVideoProcessingQueue(^{
+            [self processAudioSampleBuffer:sampleBuffer];
+            CFRelease(sampleBuffer);
+        });
     }
     else
     {
