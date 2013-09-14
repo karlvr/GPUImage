@@ -186,7 +186,6 @@
     } else {
         inputAsset = self.asset;
     }
-    GPUImageMovie __block *blockSelf = self;
     
     [inputAsset loadValuesAsynchronouslyForKeys:[NSArray arrayWithObject:@"tracks"] completionHandler: ^{
         runSynchronouslyOnVideoProcessingQueue(^{
@@ -196,9 +195,8 @@
             {
                 return;
             }
-            blockSelf.asset = inputAsset;
-            [blockSelf processAsset];
-            blockSelf = nil;
+            self.asset = inputAsset;
+            [self processAsset];
         });
     }];
 }
