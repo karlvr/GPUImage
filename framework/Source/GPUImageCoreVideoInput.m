@@ -235,13 +235,20 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 
 - (void)processVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer;
 {
+    CVImageBufferRef cameraFrame = CMSampleBufferGetImageBuffer(sampleBuffer);
+	CMTime currentTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+    [self processPixelBuffer:cameraFrame atTime:currentTime];
+}
+
+- (void)processPixelBuffer:(CVPixelBufferRef)cameraFrame
+                    atTime:(CMTime)currentTime
+{
     if (capturePaused)
     {
         return;
     }
     
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
-    CVImageBufferRef cameraFrame = CMSampleBufferGetImageBuffer(sampleBuffer);
     int bufferWidth = (int) CVPixelBufferGetWidth(cameraFrame);
     int bufferHeight = (int) CVPixelBufferGetHeight(cameraFrame);
     CFTypeRef colorAttachments = CVBufferGetAttachment(cameraFrame, kCVImageBufferYCbCrMatrixKey, NULL);
@@ -252,7 +259,6 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         _preferredConversion = kColorConversion709;
     }
     
-	CMTime currentTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
     
     [GPUImageContext useImageProcessingContext];
     
@@ -526,6 +532,24 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         CFRelease(sampleBuffer);
         dispatch_semaphore_signal(frameRenderingSemaphore);
     });
+}
+
+- (BOOL)capturePixelBuffer:(CVPixelBufferRef)pixelBuffer atTime:(CMTime)time
+{
+    if (dispatch_semaphore_wait(frameRenderingSemaphore, DISPATCH_TIME_NOW) != 0)
+    {
+        return NO;
+    }
+    
+    CFRetain(pixelBuffer);
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        [self processPixelBuffer:pixelBuffer atTime:time];
+        
+        CFRelease(pixelBuffer);
+        dispatch_semaphore_signal(frameRenderingSemaphore);
+    });
+    
+    return YES;
 }
 
 #pragma mark -

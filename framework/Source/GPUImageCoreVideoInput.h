@@ -63,6 +63,20 @@ extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString
  */
 - (void)processVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer;
 
+/** Process a pixel buffer. This must be called on the video processing
+    queue. Alternatively use the capturePixelBuffer method to send buffers
+    to the video processing queue.
+  */
+- (void)processPixelBuffer:(CVPixelBufferRef)pixelBuffer
+        atTime:(CMTime)time;
+
+/** Capture a pixel buffer and then process it on the video processing queue.
+    Returns NO if the pixel buffer is dropped as the queue is busy, or returns
+    YES if the pixel buffer has been retained and will be processed asynchronously
+    on the video processing queue.
+ */
+- (BOOL)capturePixelBuffer:(CVPixelBufferRef)pixelBuffer atTime:(CMTime)time;
+
 + (GPUImageRotationMode)rotationForImageOrientation:(UIInterfaceOrientation)imageOrientation
                               captureDevicePosition:(AVCaptureDevicePosition)position
                                horizontallyMirrored:(BOOL)horizontallyMirrored;
