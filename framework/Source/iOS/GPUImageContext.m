@@ -2,9 +2,12 @@
 #import <OpenGLES/EAGLDrawable.h>
 #import <AVFoundation/AVFoundation.h>
 
+#define MAXSHADERPROGRAMSALLOWEDINCACHE 40
+
 @interface GPUImageContext()
 {
     NSMutableDictionary *shaderProgramCache;
+    NSMutableArray *shaderProgramUsageHistory;
     EAGLSharegroup *_sharegroup;
 }
 
@@ -27,11 +30,13 @@ static void *openGLESContextQueueKey;
 
 	openGLESContextQueueKey = &openGLESContextQueueKey;
     _contextQueue = dispatch_queue_create("com.sunsetlakesoftware.GPUImage.openGLESContextQueue", NULL);
-#if (!defined(__IPHONE_6_0) || (__IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_6_0))
+    
+#if (!defined(__IPHONE_6_0) || (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0))
 #else
 	dispatch_queue_set_specific(_contextQueue, openGLESContextQueueKey, (__bridge void *)self, NULL);
 #endif
     shaderProgramCache = [[NSMutableDictionary alloc] init];
+    shaderProgramUsageHistory = [[NSMutableArray alloc] init];
     
     return self;
 }
@@ -97,9 +102,28 @@ static void *openGLESContextQueueKey;
 
 + (GLint)maximumTextureUnitsForThisDevice;
 {
-    GLint maxTextureUnits; 
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+    static dispatch_once_t pred;
+    static GLint maxTextureUnits = 0;
+
+    dispatch_once(&pred, ^{
+        [self useImageProcessingContext];
+        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+    });
+    
     return maxTextureUnits;
+}
+
++ (GLint)maximumVaryingVectorsForThisDevice;
+{
+    static dispatch_once_t pred;
+    static GLint maxVaryingVectors = 0;
+
+    dispatch_once(&pred, ^{
+        [self useImageProcessingContext];
+        glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryingVectors);
+    });
+
+    return maxVaryingVectors;
 }
 
 + (BOOL)deviceSupportsOpenGLESExtension:(NSString *)extension;
@@ -181,6 +205,16 @@ static void *openGLESContextQueueKey;
     {
         programFromCache = [[GLProgram alloc] initWithVertexShaderString:vertexShaderString fragmentShaderString:fragmentShaderString];
         [shaderProgramCache setObject:programFromCache forKey:lookupKeyForShaderProgram];
+//        [shaderProgramUsageHistory addObject:lookupKeyForShaderProgram];
+//        if ([shaderProgramUsageHistory count] >= MAXSHADERPROGRAMSALLOWEDINCACHE)
+//        {
+//            for (NSUInteger currentShaderProgramRemovedFromCache = 0; currentShaderProgramRemovedFromCache < 10; currentShaderProgramRemovedFromCache++)
+//            {
+//                NSString *shaderProgramToRemoveFromCache = [shaderProgramUsageHistory objectAtIndex:0];
+//                [shaderProgramUsageHistory removeObjectAtIndex:0];
+//                [shaderProgramCache removeObjectForKey:shaderProgramToRemoveFromCache];
+//            }
+//        }
     }
     
     return programFromCache;
