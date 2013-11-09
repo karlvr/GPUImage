@@ -1,8 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import "GPUImageContext.h"
-
-extern NSString *const kGPUImageColorSwizzlingFragmentShaderString;
+#import "GPUImageCoreVideoOutput.h"
 
 @protocol GPUImageMovieWriterDelegate <NSObject>
 
