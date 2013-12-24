@@ -243,24 +243,6 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size)
     return cgImageFromBytes;
 }
 
-- (CGImageRef)newCGImageByFilteringCGImage:(CGImageRef)imageToFilter
-{
-    return [self newCGImageByFilteringCGImage:imageToFilter orientation:UIImageOrientationUp];
-}
-
-- (CGImageRef)newCGImageByFilteringCGImage:(CGImageRef)imageToFilter orientation:(UIImageOrientation)orientation;
-{
-    GPUImagePicture *stillImageSource = [[GPUImagePicture alloc] initWithCGImage:imageToFilter];
-    
-    [stillImageSource addTarget:self];
-    [stillImageSource processImage];
-    
-    CGImageRef processedImage = [self newCGImageFromCurrentlyProcessedOutputWithOrientation:orientation];
-    
-    [stillImageSource removeTarget:self];
-    return processedImage;
-}
-
 #pragma mark -
 #pragma mark Managing the display FBOs
 
