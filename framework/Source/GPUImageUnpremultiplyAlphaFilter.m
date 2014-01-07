@@ -11,7 +11,7 @@ NSString *const kGPUImageUnpremultiplyAlphaFragmentShaderString = SHADER_STRING
  {
      lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
      
-     if (textureColor.a > 0) {
+     if (textureColor.a > 0.0) {
          gl_FragColor = vec4(textureColor.rgb / textureColor.a, textureColor.a);
      } else {
          gl_FragColor = textureColor;
@@ -29,7 +29,7 @@ NSString *const kGPUImageUnpremultiplyAlphaFragmentShaderString = SHADER_STRING
  {
      vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
      
-     if (textureColor.a > 0) {
+     if (textureColor.a > 0.0) {
          gl_FragColor = vec4(textureColor.rgb / textureColor.a, textureColor.a);
      } else {
          gl_FragColor = textureColor;
