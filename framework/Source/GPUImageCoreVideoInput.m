@@ -179,7 +179,9 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 {
     if ([GPUImageContext supportsFastTextureUpload])
     {
-        CFRelease(coreVideoTextureCache);
+        runAsynchronouslyOnVideoProcessingQueue(^{
+            CFRelease(coreVideoTextureCache);
+        });
     }
     
     // ARC forbids explicit message send of 'release'; since iOS 6 even for dispatch_release() calls: stripping it out in that case is required.
