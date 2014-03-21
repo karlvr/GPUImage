@@ -141,6 +141,11 @@
 	return self;
 }
 
+- (GPUImageFramebuffer *)framebufferForOutput;
+{
+    return outputFramebuffer;
+}
+
 - (void)dealloc 
 {
     [self stopCameraCapture];
@@ -477,7 +482,11 @@
     AVCaptureDevicePosition cameraPosition = [self cameraPosition];
     GPUImageRotationMode rotation = [GPUImageCoreVideoInput rotationForImageOrientation:_outputImageOrientation captureDevicePosition:cameraPosition horizontallyMirrored:cameraPosition == AVCaptureDevicePositionBack ? _horizontallyMirrorRearFacingCamera : _horizontallyMirrorFrontFacingCamera];
     
-    self.outputRotation = rotation;
+    if (captureAsYUV && [GPUImageContext supportsFastTextureUpload]) {
+        inputRotation = rotation;
+    } else {
+        self.outputRotation = rotation;
+    }
 }
 
 - (void)setOutputImageOrientation:(UIInterfaceOrientation)newValue;

@@ -13,7 +13,7 @@
     GLint colorSwizzlingPositionAttribute, colorSwizzlingTextureCoordinateAttribute;
     GLint colorSwizzlingInputTextureUniform;
 
-    GLuint inputTextureForMovieRendering;
+    GPUImageFramebuffer *firstInputFramebuffer;
     
     CMTime startTime, previousFrameTime, previousAudioTime;
 
@@ -606,7 +606,7 @@
     const GLfloat *textureCoordinates = [GPUImageFilter textureCoordinatesForRotation:inputRotation];
     
 	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, inputTextureForMovieRendering);
+	glBindTexture(GL_TEXTURE_2D, [firstInputFramebuffer texture]);
 	glUniform1i(colorSwizzlingInputTextureUniform, 4);	
     
     glVertexAttribPointer(colorSwizzlingPositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
@@ -615,6 +615,7 @@
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     glFinish();
+    [firstInputFramebuffer unlock];
 }
 
 #pragma mark -
@@ -624,6 +625,7 @@
 {
     if (!isRecording)
     {
+        [firstInputFramebuffer unlock];
         return;
     }
 
@@ -631,6 +633,7 @@
     // Also, if two consecutive times with the same value are added to the movie, it aborts recording, so I bail on that case
     if ( (CMTIME_IS_INVALID(frameTime)) || (CMTIME_COMPARE_INLINE(frameTime, ==, previousFrameTime)) || (CMTIME_IS_INDEFINITE(frameTime)) ) 
     {
+        [firstInputFramebuffer unlock];
         return;
     }
 
@@ -649,6 +652,7 @@
 
     if (!assetWriterVideoInput.readyForMoreMediaData && _encodingLiveVideo)
     {
+        [firstInputFramebuffer unlock];
         NSLog(@"1: Had to drop a video frame: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, frameTime)));
         return;
     }
@@ -720,9 +724,10 @@
     return 0;
 }
 
-- (void)setInputTexture:(GLuint)newInputTexture atIndex:(NSInteger)textureIndex;
+- (void)setInputFramebuffer:(GPUImageFramebuffer *)newInputFramebuffer atIndex:(NSInteger)textureIndex;
 {
-    inputTextureForMovieRendering = newInputTexture;
+    firstInputFramebuffer = newInputFramebuffer;
+    [firstInputFramebuffer lock];
 }
 
 - (void)setInputRotation:(GPUImageRotationMode)newInputRotation atIndex:(NSInteger)textureIndex;
@@ -761,16 +766,6 @@
 - (BOOL)shouldIgnoreUpdatesToThisTarget;
 {
     return NO;
-}
-
-- (void)setTextureDelegate:(id<GPUImageTextureDelegate>)newTextureDelegate atIndex:(NSInteger)textureIndex;
-{
-    textureDelegate = newTextureDelegate;
-}
-
-- (void)conserveMemoryForNextFrame;
-{
-    
 }
 
 - (BOOL)wantsMonochromeInput;

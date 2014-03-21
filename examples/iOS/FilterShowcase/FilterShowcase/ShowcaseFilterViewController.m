@@ -1323,8 +1323,9 @@
 				inputImage = [UIImage imageNamed:@"WID-small.jpg"];
 			}
 			
+//            sourcePicture = [[GPUImagePicture alloc] initWithImage:inputImage smoothlyScaleOutput:NO];
             sourcePicture = [[GPUImagePicture alloc] initWithImage:inputImage smoothlyScaleOutput:YES];
-            [sourcePicture processImage];            
+            [sourcePicture processImage];
             [sourcePicture addTarget:filter];
         }
 
@@ -1421,7 +1422,6 @@
         }
         else if (filterType == GPUIMAGE_BUFFER)
         {
-            
             GPUImageDifferenceBlendFilter *blendFilter = [[GPUImageDifferenceBlendFilter alloc] init];
 
             [videoCamera removeTarget:filter];
