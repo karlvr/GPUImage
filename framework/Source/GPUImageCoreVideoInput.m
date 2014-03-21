@@ -10,8 +10,6 @@
 
 #import "GPUImageFilter.h"
 
-#define INITIALFRAMESTOIGNOREFORBENCHMARK 5
-
 // Color Conversion Constants (YUV to RGB) including adjustment from 16-235/16-240 (video range)
 
 // BT.601, which is the standard for SDTV.
@@ -120,7 +118,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 @synthesize capturePaused = capturePaused;
 @synthesize delegate = _delegate;
 
-- (id)initWithCaptureAsYUV:(BOOL)aCaptureAsYUV
+- (id)initWithCaptureAsYUV:(BOOL)aCaptureAsYUV fullYUVRange:(BOOL)fullYUVRange
 {
     self = [super init];
     if (self) {
@@ -131,6 +129,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         outputRotation = kGPUImageNoRotation;
         internalRotation = kGPUImageNoRotation;
         captureAsYUV = aCaptureAsYUV;
+        isFullYUVRange = fullYUVRange;
         _preferredConversion = kColorConversion709;
         
         runSynchronouslyOnVideoProcessingQueue(^{
@@ -144,7 +143,15 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
                 //            }
                 //            else
                 //            {
-                yuvConversionProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kGPUImageYUVVideoRangeConversionForLAFragmentShaderString];
+                if (isFullYUVRange)
+                {
+                    yuvConversionProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kGPUImageYUVFullRangeConversionForLAFragmentShaderString];
+                }
+                else
+                {
+                    yuvConversionProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kGPUImageYUVVideoRangeConversionForLAFragmentShaderString];
+                }
+                
                 //            }
                 
                 if (!yuvConversionProgram.initialized)
@@ -196,6 +203,8 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
     }
 #endif
 }
+
+#define INITIALFRAMESTOIGNOREFORBENCHMARK 5
 
 - (void)updateTargetsForVideoCameraUsingCacheTextureAtWidth:(int)bufferWidth height:(int)bufferHeight time:(CMTime)currentTime;
 {
@@ -275,7 +284,14 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
     {
         if(CFStringCompare(colorAttachments, kCVImageBufferYCbCrMatrix_ITU_R_601_4, 0) == kCFCompareEqualTo)
         {
-            _preferredConversion = kColorConversion601;
+            if (isFullYUVRange)
+            {
+                _preferredConversion = kColorConversion601FullRange;
+            }
+            else
+            {
+                _preferredConversion = kColorConversion601;
+            }
         }
         else
         {
@@ -284,7 +300,14 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
     }
     else
     {
-        _preferredConversion = kColorConversion601FullRange;
+        if (isFullYUVRange)
+        {
+            _preferredConversion = kColorConversion601FullRange;
+        }
+        else
+        {
+            _preferredConversion = kColorConversion601;
+        }
     }
     
     [GPUImageContext useImageProcessingContext];
@@ -466,18 +489,18 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         1.0f,  1.0f,
     };
     
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, luminanceTexture);
-    glUniform1i(yuvConversionLuminanceTextureUniform, 4);
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, luminanceTexture);
+	glUniform1i(yuvConversionLuminanceTextureUniform, 4);
     
     glActiveTexture(GL_TEXTURE5);
-    glBindTexture(GL_TEXTURE_2D, chrominanceTexture);
-    glUniform1i(yuvConversionChrominanceTextureUniform, 5);
+	glBindTexture(GL_TEXTURE_2D, chrominanceTexture);
+	glUniform1i(yuvConversionChrominanceTextureUniform, 5);
     
     glUniformMatrix3fv(yuvConversionMatrixUniform, 1, GL_FALSE, _preferredConversion);
     
     glVertexAttribPointer(yuvConversionPositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
-    glVertexAttribPointer(yuvConversionTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [GPUImageFilter textureCoordinatesForRotation:internalRotation]);
+	glVertexAttribPointer(yuvConversionTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [GPUImageFilter textureCoordinatesForRotation:internalRotation]);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

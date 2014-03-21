@@ -45,7 +45,42 @@
 
 - (id)initWithSessionPreset:(NSString *)sessionPreset cameraPosition:(AVCaptureDevicePosition)cameraPosition; 
 {
-	if (!(self = [super initWithCaptureAsYUV:YES]))
+    BOOL isFullYUVRange = NO;
+    
+    // Add the video frame output
+	videoOutput = [[AVCaptureVideoDataOutput alloc] init];
+	[videoOutput setAlwaysDiscardsLateVideoFrames:NO];
+    
+    //    if (captureAsYUV && [GPUImageContext deviceSupportsRedTextures])
+    if (captureAsYUV && [GPUImageContext supportsFastTextureUpload])
+    {
+        BOOL supportsFullYUVRange = NO;
+        NSArray *supportedPixelFormats = videoOutput.availableVideoCVPixelFormatTypes;
+        for (NSNumber *currentPixelFormat in supportedPixelFormats)
+        {
+            if ([currentPixelFormat intValue] == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)
+            {
+                supportsFullYUVRange = YES;
+            }
+        }
+        
+        if (supportsFullYUVRange)
+        {
+            [videoOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+            isFullYUVRange = YES;
+        }
+        else
+        {
+            [videoOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+            isFullYUVRange = NO;
+        }
+    }
+    else
+    {
+        [videoOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+    }
+    
+	if (!(self = [super initWithCaptureAsYUV:YES fullYUVRange:isFullYUVRange]))
     {
 		return nil;
     }
@@ -82,37 +117,6 @@
 	{
 		[_captureSession addInput:videoInput];
 	}
-	
-	// Add the video frame output	
-	videoOutput = [[AVCaptureVideoDataOutput alloc] init];
-	[videoOutput setAlwaysDiscardsLateVideoFrames:NO];
-    
-//    if (captureAsYUV && [GPUImageContext deviceSupportsRedTextures])
-    if (captureAsYUV && [GPUImageContext supportsFastTextureUpload])
-    {
-        BOOL supportsFullYUVRange = NO;
-        NSArray *supportedPixelFormats = videoOutput.availableVideoCVPixelFormatTypes;
-        for (NSNumber *currentPixelFormat in supportedPixelFormats)
-        {
-            if ([currentPixelFormat intValue] == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)
-            {
-                supportsFullYUVRange = YES;
-            }
-        }
-        
-        if (supportsFullYUVRange)
-        {
-            [videoOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
-        }
-        else
-        {
-            [videoOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
-        }
-    }
-    else
-    {
-        [videoOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
-    }
     
     [videoOutput setSampleBufferDelegate:self queue:cameraProcessingQueue];
 	if ([_captureSession canAddOutput:videoOutput])

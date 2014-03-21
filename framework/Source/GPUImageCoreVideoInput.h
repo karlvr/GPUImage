@@ -13,10 +13,11 @@
 #import "GPUImageOutput.h"
 
 extern const GLfloat kColorConversion601[];
+extern const GLfloat kColorConversion601FullRange[];
 extern const GLfloat kColorConversion709[];
 extern NSString *const kGPUImageYUVVideoRangeConversionForRGFragmentShaderString;
+extern NSString *const kGPUImageYUVFullRangeConversionForLAFragmentShaderString;
 extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString;
-
 
 //Delegate Protocal for Face Detection.
 @protocol GPUImageVideoCameraDelegate <NSObject>
@@ -42,6 +43,7 @@ extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString
     GPUImageRotationMode outputRotation;
     
     GLuint luminanceTexture, chrominanceTexture;
+    BOOL isFullYUVRange;
     
     __unsafe_unretained id<GPUImageVideoCameraDelegate> _delegate;
 }
@@ -55,7 +57,7 @@ extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString
 
 @property(nonatomic, assign) id<GPUImageVideoCameraDelegate> delegate;
 
-- (id)initWithCaptureAsYUV:(BOOL)aCaptureAsYUV;
+- (id)initWithCaptureAsYUV:(BOOL)aCaptureAsYUV fullYUVRange:(BOOL)fullYUVRange;
 
 /** Process a video sample
  @param sampleBuffer Buffer to process
