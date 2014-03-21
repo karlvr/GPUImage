@@ -33,10 +33,9 @@ extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString
     
     BOOL captureAsYUV;
     BOOL capturePaused;
+    GPUImageRotationMode internalRotation;
     
 @private
-    CVOpenGLESTextureCacheRef coreVideoTextureCache;
-    
     NSUInteger numberOfFramesCaptured;
     CGFloat totalFrameTimeDuringCapture;
     
