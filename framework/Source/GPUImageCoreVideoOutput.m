@@ -50,6 +50,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     }
     
     self.enabled = YES;
+    self.backgroundColor = (GPUVector4) { 1.0, 0.0, 0.0, 1.0 };
     
     videoSize = newSize;
     inputRotation = kGPUImageNoRotation;
@@ -260,17 +261,11 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     
     [GPUImageContext setActiveShaderProgram:colorSwizzlingProgram];
     
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    GPUVector4 backgroundColor = self.backgroundColor;
+    glClearColor(backgroundColor.one, backgroundColor.two, backgroundColor.three, backgroundColor.four);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    // This needs to be flipped to write out to video correctly
-    static const GLfloat squareVertices[] = {
-        -1.0f, -1.0f,
-        1.0f, -1.0f,
-        -1.0f,  1.0f,
-        1.0f,  1.0f,
-    };
-    
+    const GLfloat *squareVertices = [self renderToVertices];
     const GLfloat *textureCoordinates = [GPUImageFilter textureCoordinatesForRotation:inputRotation];
     
 	glActiveTexture(GL_TEXTURE4);
@@ -284,6 +279,19 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     
     glFinish();
     [firstInputFramebuffer unlock];
+}
+
+- (const GLfloat *)renderToVertices
+{
+    // This needs to be flipped to write out to video correctly
+    static const GLfloat squareVertices[] = {
+        -1.0f, -1.0f,
+        1.0f, -1.0f,
+        -1.0f,  1.0f,
+        1.0f,  1.0f,
+    };
+    
+    return squareVertices;
 }
 
 #pragma mark -

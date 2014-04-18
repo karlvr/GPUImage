@@ -1,6 +1,4 @@
-#import <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
-#import "GPUImageContext.h"
+#import "GPUImageFilter.h"
 
 extern NSString *const kGPUImageColorSwizzlingFragmentShaderString;
 
@@ -15,6 +13,7 @@ extern NSString *const kGPUImageColorSwizzlingFragmentShaderString;
 }
 
 @property(nonatomic) BOOL enabled;
+@property(readwrite, nonatomic) GPUVector4 backgroundColor;
 
 // Initialization and teardown
 - (id)initWithVideoSize:(CGSize)newSize;
