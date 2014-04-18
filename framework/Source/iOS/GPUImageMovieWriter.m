@@ -489,23 +489,21 @@
     
     if ([GPUImageContext supportsFastTextureUpload])
     {
-#if defined(__IPHONE_6_0)
-        CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, [[GPUImageContext sharedImageProcessingContext] context], NULL, &coreVideoTextureCache);
-#else
-        CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (__bridge void *)[[GPUImageContext sharedImageProcessingContext] context], NULL, &coreVideoTextureCache);
-#endif
-
-        if (err) 
-        {
-            NSAssert(NO, @"Error at CVOpenGLESTextureCacheCreate %d", err);
-        }
-
         // Code originally sourced from http://allmybrain.com/2011/12/08/rendering-to-a-texture-with-ios-5-texture-cache-api/
         
 
         CVPixelBufferPoolCreatePixelBuffer (NULL, [assetWriterPixelBufferInput pixelBufferPool], &renderTarget);
 
-        CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, coreVideoTextureCache, renderTarget,
+        /* AVAssetWriter will use BT.601 conversion matrix for RGB to YCbCr conversion
+         * regardless of the kCVImageBufferYCbCrMatrixKey value.
+         * Tagging the resulting video file as BT.601, is the best option right now.
+         * Creating a proper BT.709 video is not possible at the moment.
+         */
+        CVBufferSetAttachment(renderTarget, kCVImageBufferColorPrimariesKey, kCVImageBufferColorPrimaries_ITU_R_709_2, kCVAttachmentMode_ShouldPropagate);
+        CVBufferSetAttachment(renderTarget, kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_601_4, kCVAttachmentMode_ShouldPropagate);
+        CVBufferSetAttachment(renderTarget, kCVImageBufferTransferFunctionKey, kCVImageBufferTransferFunction_ITU_R_709_2, kCVAttachmentMode_ShouldPropagate);
+        
+        CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, [[GPUImageContext sharedImageProcessingContext] coreVideoTextureCache], renderTarget,
                                                       NULL, // texture attributes
                                                       GL_TEXTURE_2D,
                                                       GL_RGBA, // opengl format
@@ -555,11 +553,6 @@
         
         if ([GPUImageContext supportsFastTextureUpload])
         {
-            if (coreVideoTextureCache)
-            {
-                CFRelease(coreVideoTextureCache);
-            }
-            
             if (renderTexture)
             {
                 CFRelease(renderTexture);
@@ -613,9 +606,9 @@
 	glVertexAttribPointer(colorSwizzlingTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    [firstInputFramebuffer unlock];
     
     glFinish();
-    [firstInputFramebuffer unlock];
 }
 
 #pragma mark -
@@ -688,7 +681,7 @@
     void(^write)() = ^() {
         while( ! assetWriterVideoInput.readyForMoreMediaData && ! _encodingLiveVideo && ! videoEncodingIsFinished ) {
             NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
-            //NSLog(@"video waiting...");
+//            NSLog(@"video waiting...");
             [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
         }
         if (!assetWriterVideoInput.readyForMoreMediaData)
@@ -714,9 +707,13 @@
     };
 
     if( _encodingLiveVideo )
+    {
         dispatch_async(movieWritingQueue, write);
+    }
     else
+    {
         write();
+    }
 }
 
 - (NSInteger)nextAvailableTextureIndex;

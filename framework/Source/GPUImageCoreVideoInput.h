@@ -43,7 +43,6 @@ extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString
     GPUImageRotationMode outputRotation;
     
     GLuint luminanceTexture, chrominanceTexture;
-    BOOL isFullYUVRange;
     
     __unsafe_unretained id<GPUImageVideoCameraDelegate> _delegate;
 }
