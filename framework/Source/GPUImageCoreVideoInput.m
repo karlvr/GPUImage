@@ -606,6 +606,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         {
             switch(imageOrientation)
             {
+                case UIInterfaceOrientationUnknown:
                 case UIInterfaceOrientationPortrait:return kGPUImageRotateRightFlipVertical; break;
                 case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotate180; break;
                 case UIInterfaceOrientationLandscapeLeft:return kGPUImageFlipHorizonal; break;
@@ -616,6 +617,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         {
             switch(imageOrientation)
             {
+                case UIInterfaceOrientationUnknown:
                 case UIInterfaceOrientationPortrait:return kGPUImageRotateRight; break;
                 case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateLeft; break;
                 case UIInterfaceOrientationLandscapeLeft:return kGPUImageRotate180; break;
@@ -629,6 +631,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         {
             switch(imageOrientation)
             {
+                case UIInterfaceOrientationUnknown:
                 case UIInterfaceOrientationPortrait:return kGPUImageRotateRightFlipVertical; break;
                 case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateRightFlipHorizontal; break;
                 case UIInterfaceOrientationLandscapeLeft:return kGPUImageFlipHorizonal; break;
@@ -639,6 +642,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         {
             switch(imageOrientation)
             {
+                case UIInterfaceOrientationUnknown:
                 case UIInterfaceOrientationPortrait:return kGPUImageRotateRight; break;
                 case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateLeft; break;
                 case UIInterfaceOrientationLandscapeLeft:return kGPUImageNoRotation; break;
