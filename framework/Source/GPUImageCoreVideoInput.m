@@ -606,20 +606,22 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         {
             switch(imageOrientation)
             {
-                case UIInterfaceOrientationPortrait:return kGPUImageRotateRightFlipVertical; break;
-                case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotate180; break;
-                case UIInterfaceOrientationLandscapeLeft:return kGPUImageFlipHorizonal; break;
-                case UIInterfaceOrientationLandscapeRight:return kGPUImageFlipVertical; break;
+                case UIInterfaceOrientationPortrait:return kGPUImageRotateRightFlipVertical;
+                case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotate180;
+                case UIInterfaceOrientationLandscapeLeft:return kGPUImageFlipHorizonal;
+                case UIInterfaceOrientationLandscapeRight:return kGPUImageFlipVertical;
+                default: return kGPUImageNoRotation;
             }
         }
         else
         {
             switch(imageOrientation)
             {
-                case UIInterfaceOrientationPortrait:return kGPUImageRotateRight; break;
-                case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateLeft; break;
-                case UIInterfaceOrientationLandscapeLeft:return kGPUImageRotate180; break;
-                case UIInterfaceOrientationLandscapeRight:return kGPUImageNoRotation; break;
+                case UIInterfaceOrientationPortrait:return kGPUImageRotateRight;
+                case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateLeft;
+                case UIInterfaceOrientationLandscapeLeft:return kGPUImageRotate180;
+                case UIInterfaceOrientationLandscapeRight:return kGPUImageNoRotation;
+                default: return kGPUImageNoRotation;
             }
         }
     }
@@ -629,20 +631,22 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         {
             switch(imageOrientation)
             {
-                case UIInterfaceOrientationPortrait:return kGPUImageRotateRightFlipVertical; break;
-                case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateRightFlipHorizontal; break;
-                case UIInterfaceOrientationLandscapeLeft:return kGPUImageFlipHorizonal; break;
-                case UIInterfaceOrientationLandscapeRight:return kGPUImageFlipVertical; break;
+                case UIInterfaceOrientationPortrait:return kGPUImageRotateRightFlipVertical;
+                case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateRightFlipHorizontal;
+                case UIInterfaceOrientationLandscapeLeft:return kGPUImageFlipHorizonal;
+                case UIInterfaceOrientationLandscapeRight:return kGPUImageFlipVertical;
+                default: return kGPUImageNoRotation;
             }
         }
         else
         {
             switch(imageOrientation)
             {
-                case UIInterfaceOrientationPortrait:return kGPUImageRotateRight; break;
-                case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateLeft; break;
-                case UIInterfaceOrientationLandscapeLeft:return kGPUImageNoRotation; break;
-                case UIInterfaceOrientationLandscapeRight:return kGPUImageRotate180; break;
+                case UIInterfaceOrientationPortrait:return kGPUImageRotateRight;
+                case UIInterfaceOrientationPortraitUpsideDown:return kGPUImageRotateLeft;
+                case UIInterfaceOrientationLandscapeLeft:return kGPUImageNoRotation;
+                case UIInterfaceOrientationLandscapeRight:return kGPUImageRotate180;
+                default: return kGPUImageNoRotation;
             }
         }
     }
