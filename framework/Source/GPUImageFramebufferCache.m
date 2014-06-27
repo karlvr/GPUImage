@@ -14,8 +14,6 @@
     NSMutableDictionary *framebufferTypeCounts;
     NSMutableArray *activeImageCaptureList; // Where framebuffers that may be lost by a filter, but which are still needed for a UIImage, etc., are stored
     id memoryWarningObserver;
-
-    dispatch_queue_t framebufferCacheQueue;
 }
 
 - (NSString *)hashForSize:(CGSize)size textureOptions:(GPUTextureOptions)textureOptions onlyTexture:(BOOL)onlyTexture;
@@ -47,7 +45,6 @@
     framebufferCache = [[NSMutableDictionary alloc] init];
     framebufferTypeCounts = [[NSMutableDictionary alloc] init];
     activeImageCaptureList = [[NSMutableArray alloc] init];
-    framebufferCacheQueue = dispatch_queue_create("com.sunsetlakesoftware.GPUImage.framebufferCacheQueue", NULL);
     
     return self;
 }
@@ -70,13 +67,13 @@
 - (GPUImageFramebuffer *)fetchFramebufferForSize:(CGSize)framebufferSize textureOptions:(GPUTextureOptions)textureOptions onlyTexture:(BOOL)onlyTexture;
 {
     __block GPUImageFramebuffer *framebufferFromCache = nil;
-//    dispatch_sync(framebufferCacheQueue, ^{
+
     runSynchronouslyOnVideoProcessingQueue(^{
         NSString *lookupHash = [self hashForSize:framebufferSize textureOptions:textureOptions onlyTexture:onlyTexture];
         NSNumber *numberOfMatchingTexturesInCache = [framebufferTypeCounts objectForKey:lookupHash];
         NSInteger numberOfMatchingTextures = [numberOfMatchingTexturesInCache integerValue];
         
-        if ([numberOfMatchingTexturesInCache integerValue] < 1)
+        if (numberOfMatchingTextures < 1)
         {
             // Nothing in the cache, create a new framebuffer to use
             framebufferFromCache = [[GPUImageFramebuffer alloc] initWithSize:framebufferSize textureOptions:textureOptions onlyTexture:onlyTexture];
@@ -131,7 +128,6 @@
 {
     [framebuffer clearAllLocks];
     
-//    dispatch_async(framebufferCacheQueue, ^{
     runAsynchronouslyOnVideoProcessingQueue(^{
         CGSize framebufferSize = framebuffer.size;
         GPUTextureOptions framebufferTextureOptions = framebuffer.textureOptions;
@@ -150,7 +146,7 @@
 - (void)purgeAllUnassignedFramebuffers;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
-//    dispatch_async(framebufferCacheQueue, ^{
+
         [framebufferCache removeAllObjects];
         [framebufferTypeCounts removeAllObjects];
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
@@ -163,7 +159,6 @@
 - (void)addFramebufferToActiveImageCaptureList:(GPUImageFramebuffer *)framebuffer;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
-//    dispatch_async(framebufferCacheQueue, ^{
         [activeImageCaptureList addObject:framebuffer];
     });
 }
@@ -171,7 +166,6 @@
 - (void)removeFramebufferFromActiveImageCaptureList:(GPUImageFramebuffer *)framebuffer;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
-//  dispatch_async(framebufferCacheQueue, ^{
         [activeImageCaptureList removeObject:framebuffer];
     });
 }
