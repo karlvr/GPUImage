@@ -277,7 +277,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
-    glFinish();
+    glFlush();
     [firstInputFramebuffer unlock];
 }
 
