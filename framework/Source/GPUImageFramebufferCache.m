@@ -1,6 +1,8 @@
 #import "GPUImageFramebufferCache.h"
 #import "GPUImageContext.h"
 #import "GPUImageOutput.h"
+#import "GPUImageFramebufferPool.h"
+#import "GPUImageFramebufferIdleTrackingPool.h"
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
@@ -13,6 +15,7 @@
     NSMutableDictionary *framebufferCache;
     NSMutableArray *activeImageCaptureList; // Where framebuffers that may be lost by a filter, but which are still needed for a UIImage, etc., are stored
     id memoryWarningObserver;
+    NSTimer *cacheMaintenanceTimer;
 }
 
 - (NSString *)hashForSize:(CGSize)size textureOptions:(GPUTextureOptions)textureOptions onlyTexture:(BOOL)onlyTexture;
@@ -35,7 +38,12 @@
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     memoryWarningObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         
-        [self purgeAllUnassignedFramebuffers];
+//        [self purgeAllUnassignedFramebuffers];
+        
+        /* Purging framebuffers causes thrashing if we are currently using framebuffers, so we force the
+           framebuffer cache instead.
+         */
+        [self maintainFramebufferCache:YES];
 	}];
 #else
 #endif
@@ -44,7 +52,17 @@
     framebufferCache = [[NSMutableDictionary alloc] init];
     activeImageCaptureList = [[NSMutableArray alloc] init];
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        cacheMaintenanceTimer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(maintainFramebufferCache) userInfo:nil repeats:YES];
+    });
+    
     return self;
+}
+
+- (void)dealloc
+{
+    [cacheMaintenanceTimer invalidate];
+    cacheMaintenanceTimer = nil;
 }
 
 #pragma mark -
@@ -68,18 +86,13 @@
 
     runSynchronouslyOnVideoProcessingQueue(^{
         NSString *lookupHash = [self hashForSize:framebufferSize textureOptions:textureOptions onlyTexture:onlyTexture];
-        NSMutableArray *framebuffers = [framebufferCache objectForKey:lookupHash];
+        GPUImageFramebufferPool *pool = [framebufferCache objectForKey:lookupHash];
         
-        if (framebuffers.count < 1)
+        framebufferFromCache = [pool popObject];
+        if (!framebufferFromCache)
         {
             // Nothing in the cache, create a new framebuffer to use
             framebufferFromCache = [[GPUImageFramebuffer alloc] initWithSize:framebufferSize textureOptions:textureOptions onlyTexture:onlyTexture];
-        }
-        else
-        {
-            // Something found, pull the old framebuffer
-            framebufferFromCache = [framebuffers lastObject];
-            [framebuffers removeLastObject];
         }
     });
 
@@ -109,13 +122,14 @@
         CGSize framebufferSize = framebuffer.size;
         GPUTextureOptions framebufferTextureOptions = framebuffer.textureOptions;
         NSString *lookupHash = [self hashForSize:framebufferSize textureOptions:framebufferTextureOptions onlyTexture:framebuffer.missingFramebuffer];
-        NSMutableArray *framebuffers = [framebufferCache objectForKey:lookupHash];
-        if (!framebuffers) {
-            framebuffers = [NSMutableArray array];
-            [framebufferCache setObject:framebuffers forKey:lookupHash];
+        GPUImageFramebufferPool *pool = [framebufferCache objectForKey:lookupHash];
+        if (!pool) {
+            pool = [GPUImageFramebufferIdleTrackingPool new];
+            pool.name = lookupHash;
+            [framebufferCache setObject:pool forKey:lookupHash];
         }
         
-        [framebuffers addObject:framebuffer];
+        [pool pushObject:framebuffer];
     });
 }
 
@@ -142,6 +156,20 @@
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [activeImageCaptureList removeObject:framebuffer];
+    });
+}
+
+- (void)maintainFramebufferCache
+{
+    [self maintainFramebufferCache:NO];
+}
+
+- (void)maintainFramebufferCache:(BOOL)force
+{
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        for (GPUImageFramebufferPool *pool in [framebufferCache allValues]) {
+            [pool maintain:force];
+        }
     });
 }
 
