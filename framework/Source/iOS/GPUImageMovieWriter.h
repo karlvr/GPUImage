@@ -39,6 +39,7 @@
 @property(readwrite, nonatomic) BOOL encodingLiveVideo;
 @property(nonatomic, copy) BOOL(^videoInputReadyCallback)(void);
 @property(nonatomic, copy) BOOL(^audioInputReadyCallback)(void);
+@property(nonatomic, copy) void(^audioProcessingCallback)(SInt16 **samplesRef, CMItemCount numSamplesInBuffer);
 @property(nonatomic) BOOL enabled;
 @property(nonatomic, readonly) AVAssetWriter *assetWriter;
 @property(nonatomic, readonly) CMTime duration;
