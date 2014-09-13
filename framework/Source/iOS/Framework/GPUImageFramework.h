@@ -6,7 +6,7 @@ FOUNDATION_EXPORT double GPUImageFrameworkVersionNumber;
 //! Project version string for GPUImageFramework.
 FOUNDATION_EXPORT const unsigned char GPUImageFrameworkVersionString[];
 
-#import <GPUImage/GLProgram.h>
+#import <GPUImage/GPUImageGLProgram.h>
 
 // Base classes
 #import <GPUImage/GPUImageContext.h>

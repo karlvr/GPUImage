@@ -2,7 +2,7 @@
 
 @interface GPUImagePolkaDotFilter : GPUImagePixellateFilter
 {
-    GLint dotScalingUniform;
+    GPUImageUniform dotScalingUniform;
 }
 
 @property(readwrite, nonatomic) CGFloat dotScaling;

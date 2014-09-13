@@ -356,7 +356,7 @@ NSString *const kGPUImageJFAVoronoiFragmentShaderString = SHADER_STRING
         NSLog(@"Voronoi point texture must be a power of 2.  Texture size: %f, %f", sizeInPixels.width, sizeInPixels.height);
         return;
     }
-    glUniform2f(sizeUniform, _sizeInPixels.width, _sizeInPixels.height);
+    GPUImageglUniform2f(sizeUniform, _sizeInPixels.width, _sizeInPixels.height);
 }
 
 #pragma mark -
@@ -404,13 +404,13 @@ NSString *const kGPUImageJFAVoronoiFragmentShaderString = SHADER_STRING
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    glUniform1f(sampleStepUniform, 0.5);
+    GPUImageglUniform1f(sampleStepUniform, 0.5);
     
-    glUniform2f(sizeUniform, _sizeInPixels.width, _sizeInPixels.height);
+    GPUImageglUniform2f(sizeUniform, _sizeInPixels.width, _sizeInPixels.height);
     
     glBindTexture(GL_TEXTURE_2D, [firstInputFramebuffer texture]);
     
-    glUniform1i(filterInputTextureUniform, 2);
+    GPUImageglUniform1i(filterInputTextureUniform, 2);
     
     glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
     glVertexAttribPointer(filterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
@@ -430,11 +430,11 @@ NSString *const kGPUImageJFAVoronoiFragmentShaderString = SHADER_STRING
         } else {
             glBindTexture(GL_TEXTURE_2D, [outputFramebuffer texture]);
         }
-        glUniform1i(filterInputTextureUniform, 2);
+        GPUImageglUniform1i(filterInputTextureUniform, 2);
         
         float step = pow(2.0, numPasses - pass) / pow(2.0, numPasses);
-        glUniform1f(sampleStepUniform, step);
-        glUniform2f(sizeUniform, _sizeInPixels.width, _sizeInPixels.height);
+        GPUImageglUniform1f(sampleStepUniform, step);
+        GPUImageglUniform2f(sizeUniform, _sizeInPixels.width, _sizeInPixels.height);
         
         glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
         glVertexAttribPointer(filterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);

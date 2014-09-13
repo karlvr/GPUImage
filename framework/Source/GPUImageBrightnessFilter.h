@@ -2,7 +2,7 @@
 
 @interface GPUImageBrightnessFilter : GPUImageFilter
 {
-    GLint brightnessUniform;
+    GPUImageUniform brightnessUniform;
 }
 
 // Brightness ranges from -1.0 to 1.0, with 0.0 as the normal level

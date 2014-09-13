@@ -5,7 +5,7 @@
  */
 @interface GPUImageToonFilter : GPUImage3x3TextureSamplingFilter
 {
-    GLint thresholdUniform, quantizationLevelsUniform;
+    GPUImageUniform thresholdUniform, quantizationLevelsUniform;
 }
 
 /** The threshold at which to apply the edges, default of 0.2

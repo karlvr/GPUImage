@@ -13,9 +13,9 @@
     GPUImageFramebuffer *inputFramebufferForDisplay;
     GLuint displayRenderbuffer, displayFramebuffer;
     
-    GLProgram *displayProgram;
+    GPUImageGLProgram *displayProgram;
     GLint displayPositionAttribute, displayTextureCoordinateAttribute;
-    GLint displayInputTextureUniform;
+    GPUImageUniform displayInputTextureUniform;
 
     CGSize inputImageSize;
     GLfloat imageVertices[8];
@@ -377,7 +377,7 @@
         
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_2D, [inputFramebufferForDisplay texture]);
-        glUniform1i(displayInputTextureUniform, 4);
+        GPUImageglUniform1i(displayInputTextureUniform, 4);
         
         glVertexAttribPointer(displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices);
         glVertexAttribPointer(displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [GPUImageView textureCoordinatesForRotation:inputRotation]);

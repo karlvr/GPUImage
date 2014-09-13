@@ -2,7 +2,7 @@
 
 @interface GPUImageTransformFilter : GPUImageFilter
 {
-    GLint transformMatrixUniform, orthographicMatrixUniform;
+    GPUImageUniform transformMatrixUniform, orthographicMatrixUniform;
     GPUMatrix4x4 orthographicMatrix;
 }
 

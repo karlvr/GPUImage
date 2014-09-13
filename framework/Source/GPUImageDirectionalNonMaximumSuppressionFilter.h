@@ -2,8 +2,8 @@
 
 @interface GPUImageDirectionalNonMaximumSuppressionFilter : GPUImageFilter
 {
-    GLint texelWidthUniform, texelHeightUniform;
-    GLint upperThresholdUniform, lowerThresholdUniform;
+    GPUImageUniform texelWidthUniform, texelHeightUniform;
+    GPUImageUniform upperThresholdUniform, lowerThresholdUniform;
     
     BOOL hasOverriddenImageSizeFactor;
 }

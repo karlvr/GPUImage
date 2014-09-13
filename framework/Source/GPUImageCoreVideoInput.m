@@ -98,10 +98,10 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 
 @interface GPUImageCoreVideoInput () {
     
-    GLProgram *yuvConversionProgram;
+    GPUImageGLProgram *yuvConversionProgram;
     GLint yuvConversionPositionAttribute, yuvConversionTextureCoordinateAttribute;
-    GLint yuvConversionLuminanceTextureUniform, yuvConversionChrominanceTextureUniform;
-    GLint yuvConversionMatrixUniform;
+    GPUImageUniform yuvConversionLuminanceTextureUniform, yuvConversionChrominanceTextureUniform;
+    GPUImageUniform yuvConversionMatrixUniform;
     const GLfloat *_preferredConversion;
     
     BOOL isFullYUVRange;
@@ -494,13 +494,13 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
     
 	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, luminanceTexture);
-	glUniform1i(yuvConversionLuminanceTextureUniform, 4);
+	GPUImageglUniform1i(yuvConversionLuminanceTextureUniform, 4);
     
     glActiveTexture(GL_TEXTURE5);
 	glBindTexture(GL_TEXTURE_2D, chrominanceTexture);
-	glUniform1i(yuvConversionChrominanceTextureUniform, 5);
+	GPUImageglUniform1i(yuvConversionChrominanceTextureUniform, 5);
     
-    glUniformMatrix3fv(yuvConversionMatrixUniform, 1, GL_FALSE, _preferredConversion);
+    GPUImageglUniformMatrix3fv(yuvConversionMatrixUniform, 1, GL_FALSE, _preferredConversion);
     
     glVertexAttribPointer(yuvConversionPositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
 	glVertexAttribPointer(yuvConversionTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [GPUImageFilter textureCoordinatesForRotation:internalRotation]);

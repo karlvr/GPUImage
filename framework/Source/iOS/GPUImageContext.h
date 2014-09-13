@@ -1,4 +1,4 @@
-#import "GLProgram.h"
+#import "GPUImageGLProgram.h"
 #import "GPUImageFramebuffer.h"
 #import "GPUImageFramebufferCache.h"
 
@@ -9,7 +9,7 @@ typedef enum { kGPUImageNoRotation, kGPUImageRotateLeft, kGPUImageRotateRight, k
 @interface GPUImageContext : NSObject
 
 @property(readonly, nonatomic) dispatch_queue_t contextQueue;
-@property(readwrite, retain, nonatomic) GLProgram *currentShaderProgram;
+@property(readwrite, retain, nonatomic) GPUImageGLProgram *currentShaderProgram;
 @property(readonly, retain, nonatomic) EAGLContext *context;
 @property(readonly) CVOpenGLESTextureCacheRef coreVideoTextureCache;
 @property(readonly) GPUImageFramebufferCache *framebufferCache;
@@ -20,8 +20,8 @@ typedef enum { kGPUImageNoRotation, kGPUImageRotateLeft, kGPUImageRotateRight, k
 + (GPUImageFramebufferCache *)sharedFramebufferCache;
 + (void)useImageProcessingContext;
 - (void)useAsCurrentContext;
-+ (void)setActiveShaderProgram:(GLProgram *)shaderProgram;
-- (void)setContextShaderProgram:(GLProgram *)shaderProgram;
++ (void)setActiveShaderProgram:(GPUImageGLProgram *)shaderProgram;
+- (void)setContextShaderProgram:(GPUImageGLProgram *)shaderProgram;
 + (GLint)maximumTextureSizeForThisDevice;
 + (GLint)maximumTextureUnitsForThisDevice;
 + (GLint)maximumVaryingVectorsForThisDevice;
@@ -31,7 +31,7 @@ typedef enum { kGPUImageNoRotation, kGPUImageRotateLeft, kGPUImageRotateRight, k
 + (CGSize)sizeThatFitsWithinATextureForSize:(CGSize)inputSize;
 
 - (void)presentBufferForDisplay;
-- (GLProgram *)programForVertexShaderString:(NSString *)vertexShaderString fragmentShaderString:(NSString *)fragmentShaderString;
+- (GPUImageGLProgram *)programForVertexShaderString:(NSString *)vertexShaderString fragmentShaderString:(NSString *)fragmentShaderString;
 
 - (void)useSharegroup:(EAGLSharegroup *)sharegroup;
 

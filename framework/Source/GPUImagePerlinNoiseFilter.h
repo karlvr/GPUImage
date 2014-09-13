@@ -2,7 +2,7 @@
 
 @interface GPUImagePerlinNoiseFilter : GPUImageFilter 
 {
-    GLint scaleUniform, colorStartUniform, colorFinishUniform;
+    GPUImageUniform scaleUniform, colorStartUniform, colorFinishUniform;
 }
 
 @property (readwrite, nonatomic) GPUVector4 colorStart;

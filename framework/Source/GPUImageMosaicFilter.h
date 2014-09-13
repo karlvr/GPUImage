@@ -5,7 +5,7 @@
 #import "GPUImagePicture.h"
 
 @interface GPUImageMosaicFilter : GPUImageTwoInputFilter {
-    GLint inputTileSizeUniform, numTilesUniform, displayTileSizeUniform, colorOnUniform;
+    GPUImageUniform inputTileSizeUniform, numTilesUniform, displayTileSizeUniform, colorOnUniform;
     GPUImagePicture *pic;
 }
 

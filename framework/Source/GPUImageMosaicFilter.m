@@ -121,7 +121,7 @@ NSString *const kGPUImageMosaicFragmentShaderString = SHADER_STRING
 
 - (void)setColorOn:(BOOL)yes
 {
-    glUniform1i(colorOnUniform, yes);
+    GPUImageglUniform1i(colorOnUniform, yes);
 }
 
 - (void)setNumTiles:(float)numTiles

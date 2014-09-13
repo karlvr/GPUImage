@@ -122,13 +122,13 @@ NSString *const kGPUImageSharpenFragmentShaderString = SHADER_STRING
         
         if (GPUImageRotationSwapsWidthAndHeight(inputRotation))
         {
-            glUniform1f(imageWidthFactorUniform, 1.0 / filterFrameSize.height);
-            glUniform1f(imageHeightFactorUniform, 1.0 / filterFrameSize.width);
+            GPUImageglUniform1f(imageWidthFactorUniform, 1.0 / filterFrameSize.height);
+            GPUImageglUniform1f(imageHeightFactorUniform, 1.0 / filterFrameSize.width);
         }
         else
         {
-            glUniform1f(imageWidthFactorUniform, 1.0 / filterFrameSize.width);
-            glUniform1f(imageHeightFactorUniform, 1.0 / filterFrameSize.height);
+            GPUImageglUniform1f(imageWidthFactorUniform, 1.0 / filterFrameSize.width);
+            GPUImageglUniform1f(imageHeightFactorUniform, 1.0 / filterFrameSize.height);
         }
     });
 }

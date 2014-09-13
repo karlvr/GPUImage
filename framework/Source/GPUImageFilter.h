@@ -49,9 +49,9 @@ typedef struct GPUMatrix3x3 GPUMatrix3x3;
 {
     GPUImageFramebuffer *firstInputFramebuffer;
     
-    GLProgram *filterProgram;
+    GPUImageGLProgram *filterProgram;
     GLint filterPositionAttribute, filterTextureCoordinateAttribute;
-    GLint filterInputTextureUniform;
+    GPUImageUniform filterInputTextureUniform;
     GLfloat backgroundColorRed, backgroundColorGreen, backgroundColorBlue, backgroundColorAlpha;
     
     BOOL isEndProcessing;
@@ -118,17 +118,17 @@ typedef struct GPUMatrix3x3 GPUMatrix3x3;
 - (void)setFloatVec4:(GPUVector4)newVec4 forUniform:(NSString *)uniformName;
 - (void)setFloatArray:(GLfloat *)array length:(GLsizei)count forUniform:(NSString*)uniformName;
 
-- (void)setMatrix3f:(GPUMatrix3x3)matrix forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
-- (void)setMatrix4f:(GPUMatrix4x4)matrix forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
-- (void)setFloat:(GLfloat)floatValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
-- (void)setPoint:(CGPoint)pointValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
-- (void)setSize:(CGSize)sizeValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
-- (void)setVec3:(GPUVector3)vectorValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
-- (void)setVec4:(GPUVector4)vectorValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
-- (void)setFloatArray:(GLfloat *)arrayValue length:(GLsizei)arrayLength forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
-- (void)setInteger:(GLint)intValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setMatrix3f:(GPUMatrix3x3)matrix forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
+- (void)setMatrix4f:(GPUMatrix4x4)matrix forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
+- (void)setFloat:(GLfloat)floatValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
+- (void)setPoint:(CGPoint)pointValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
+- (void)setSize:(CGSize)sizeValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
+- (void)setVec3:(GPUVector3)vectorValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
+- (void)setVec4:(GPUVector4)vectorValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
+- (void)setFloatArray:(GLfloat *)arrayValue length:(GLsizei)arrayLength forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
+- (void)setInteger:(GLint)intValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 
-- (void)setAndExecuteUniformStateCallbackAtIndex:(GLint)uniform forProgram:(GLProgram *)shaderProgram toBlock:(dispatch_block_t)uniformStateBlock;
+- (void)setAndExecuteUniformStateCallbackAtIndex:(GPUImageUniform)uniform forProgram:(GPUImageGLProgram *)shaderProgram toBlock:(dispatch_block_t)uniformStateBlock;
 - (void)setUniformsForProgramAtIndex:(NSUInteger)programIndex;
 
 @end

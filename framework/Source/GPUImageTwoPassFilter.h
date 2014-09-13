@@ -4,9 +4,9 @@
 {
     GPUImageFramebuffer *secondOutputFramebuffer;
 
-    GLProgram *secondFilterProgram;
+    GPUImageGLProgram *secondFilterProgram;
     GLint secondFilterPositionAttribute, secondFilterTextureCoordinateAttribute;
-    GLint secondFilterInputTextureUniform, secondFilterInputTextureUniform2;
+    GPUImageUniform secondFilterInputTextureUniform, secondFilterInputTextureUniform2;
     
     NSMutableDictionary *secondProgramUniformStateRestorationBlocks;
 }

@@ -2,7 +2,7 @@
 
 @interface GPUImageHistogramGenerator : GPUImageFilter
 {
-    GLint backgroundColorUniform;
+    GPUImageUniform backgroundColorUniform;
 }
 
 @end

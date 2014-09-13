@@ -3,7 +3,7 @@
 
 @interface GPUImagePoissonBlendFilter : GPUImageTwoInputCrossTextureSamplingFilter
 {
-    GLint mixUniform;
+    GPUImageUniform mixUniform;
     
     GPUImageFramebuffer *secondOutputFramebuffer;
 }

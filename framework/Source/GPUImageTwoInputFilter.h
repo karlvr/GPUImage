@@ -7,7 +7,7 @@ extern NSString *const kGPUImageTwoInputTextureVertexShaderString;
     GPUImageFramebuffer *secondInputFramebuffer;
 
     GLint filterSecondTextureCoordinateAttribute;
-    GLint filterInputTextureUniform2;
+    GPUImageUniform filterInputTextureUniform2;
     GPUImageRotationMode inputRotation2;
     CMTime firstFrameTime, secondFrameTime;
     

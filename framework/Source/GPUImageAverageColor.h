@@ -4,7 +4,7 @@ extern NSString *const kGPUImageColorAveragingVertexShaderString;
 
 @interface GPUImageAverageColor : GPUImageFilter
 {
-    GLint texelWidthUniform, texelHeightUniform;
+    GPUImageUniform texelWidthUniform, texelHeightUniform;
     
     NSUInteger numberOfStages;
     

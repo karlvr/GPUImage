@@ -2,7 +2,7 @@
 
 @interface GPUImageGammaFilter : GPUImageFilter
 {
-    GLint gammaUniform;
+    GPUImageUniform gammaUniform;
 }
 
 // Gamma ranges from 0.0 to 3.0, with 1.0 as the normal level

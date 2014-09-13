@@ -2,7 +2,7 @@
 
 @interface GPUImageOpacityFilter : GPUImageFilter
 {
-    GLint opacityUniform;
+    GPUImageUniform opacityUniform;
 }
 
 // Opacity ranges from 0.0 to 1.0, with 1.0 as the normal setting

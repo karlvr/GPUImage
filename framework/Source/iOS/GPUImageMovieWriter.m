@@ -1,7 +1,7 @@
 #import "GPUImageMovieWriter.h"
 
 #import "GPUImageContext.h"
-#import "GLProgram.h"
+#import "GPUImageGLProgram.h"
 #import "GPUImageFilter.h"
 
 
@@ -9,9 +9,9 @@
 {
     GLuint movieFramebuffer, movieRenderbuffer;
     
-    GLProgram *colorSwizzlingProgram;
+    GPUImageGLProgram *colorSwizzlingProgram;
     GLint colorSwizzlingPositionAttribute, colorSwizzlingTextureCoordinateAttribute;
-    GLint colorSwizzlingInputTextureUniform;
+    GPUImageUniform colorSwizzlingInputTextureUniform;
 
     GPUImageFramebuffer *firstInputFramebuffer;
     
@@ -625,7 +625,7 @@
     
 	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, [inputFramebufferToUse texture]);
-	glUniform1i(colorSwizzlingInputTextureUniform, 4);
+	GPUImageglUniform1i(colorSwizzlingInputTextureUniform, 4);
     
 //    NSLog(@"Movie writer framebuffer: %@", inputFramebufferToUse);
     

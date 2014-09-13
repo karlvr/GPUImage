@@ -4,7 +4,7 @@
  */
 @interface GPUImageSwirlFilter : GPUImageFilter
 {
-    GLint radiusUniform, centerUniform, angleUniform;
+    GPUImageUniform radiusUniform, centerUniform, angleUniform;
 }
 
 /// The center about which to apply the distortion, with a default of (0.5, 0.5)

@@ -4,7 +4,7 @@ extern NSString *const kGPUImageNearbyTexelSamplingVertexShaderString;
 
 @interface GPUImage3x3TextureSamplingFilter : GPUImageFilter
 {
-    GLint texelWidthUniform, texelHeightUniform;
+    GPUImageUniform texelWidthUniform, texelHeightUniform;
     
     CGFloat texelWidth, texelHeight;
     BOOL hasOverriddenImageSizeFactor;

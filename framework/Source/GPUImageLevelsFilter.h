@@ -13,11 +13,11 @@
  */
 @interface GPUImageLevelsFilter : GPUImageFilter
 {
-    GLint minUniform;
-    GLint midUniform;
-    GLint maxUniform;
-    GLint minOutputUniform;
-    GLint maxOutputUniform;
+    GPUImageUniform minUniform;
+    GPUImageUniform midUniform;
+    GPUImageUniform maxUniform;
+    GPUImageUniform minOutputUniform;
+    GPUImageUniform maxOutputUniform;
     
     GPUVector3 minVector, midVector, maxVector, minOutputVector, maxOutputVector;
 }

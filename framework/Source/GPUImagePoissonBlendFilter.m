@@ -157,11 +157,11 @@ NSString *const kGPUImagePoissonBlendFragmentShaderString = SHADER_STRING
             
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, [outputFramebuffer texture]);
-            glUniform1i(filterInputTextureUniform, 2);
+            GPUImageglUniform1i(filterInputTextureUniform, 2);
             
             glActiveTexture(GL_TEXTURE3);
             glBindTexture(GL_TEXTURE_2D, [secondInputFramebuffer texture]);
-            glUniform1i(filterInputTextureUniform2, 3);
+            GPUImageglUniform1i(filterInputTextureUniform2, 3);
             
             glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
             glVertexAttribPointer(filterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [[self class] textureCoordinatesForRotation:kGPUImageNoRotation]);

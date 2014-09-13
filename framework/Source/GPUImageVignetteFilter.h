@@ -4,7 +4,7 @@
  */
 @interface GPUImageVignetteFilter : GPUImageFilter 
 {
-    GLint vignetteCenterUniform, vignetteColorUniform, vignetteStartUniform, vignetteEndUniform;
+    GPUImageUniform vignetteCenterUniform, vignetteColorUniform, vignetteStartUniform, vignetteEndUniform;
 }
 
 // the center for the vignette in tex coords (defaults to 0.5, 0.5)

@@ -37,13 +37,13 @@
     
     if (programIndex == 0)
     {
-        glUniform1f(verticalPassTexelWidthOffsetUniform, verticalPassTexelWidthOffset);
-        glUniform1f(verticalPassTexelHeightOffsetUniform, verticalPassTexelHeightOffset);
+        GPUImageglUniform1f(verticalPassTexelWidthOffsetUniform, verticalPassTexelWidthOffset);
+        GPUImageglUniform1f(verticalPassTexelHeightOffsetUniform, verticalPassTexelHeightOffset);
     }
     else
     {
-        glUniform1f(horizontalPassTexelWidthOffsetUniform, horizontalPassTexelWidthOffset);
-        glUniform1f(horizontalPassTexelHeightOffsetUniform, horizontalPassTexelHeightOffset);
+        GPUImageglUniform1f(horizontalPassTexelWidthOffsetUniform, horizontalPassTexelWidthOffset);
+        GPUImageglUniform1f(horizontalPassTexelHeightOffsetUniform, horizontalPassTexelHeightOffset);
     }
 }
 

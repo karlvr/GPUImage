@@ -101,8 +101,8 @@ NSString *const kGPUImageColorPackingFragmentShaderString = SHADER_STRING
 
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:filterProgram];
-        glUniform1f(texelWidthUniform, texelWidth);
-        glUniform1f(texelHeightUniform, texelHeight);
+        GPUImageglUniform1f(texelWidthUniform, texelWidth);
+        GPUImageglUniform1f(texelHeightUniform, texelHeight);
     });
 }
 

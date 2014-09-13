@@ -14,8 +14,8 @@
  */
 @interface GPUImageHazeFilter : GPUImageFilter
 {
-    GLint distanceUniform;
-	GLint slopeUniform;
+    GPUImageUniform distanceUniform;
+	GPUImageUniform slopeUniform;
 }
 
 /** Strength of the color applied. Default 0. Values between -.3 and .3 are best

@@ -1,7 +1,7 @@
 #import "GPUImageCoreVideoOutput.h"
 
 #import "GPUImageContext.h"
-#import "GLProgram.h"
+#import "GPUImageGLProgram.h"
 #import "GPUImageFilter.h"
 
 NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
@@ -21,9 +21,9 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 {
     GLuint movieFramebuffer, movieRenderbuffer;
     
-    GLProgram *colorSwizzlingProgram;
+    GPUImageGLProgram *colorSwizzlingProgram;
     GLint colorSwizzlingPositionAttribute, colorSwizzlingTextureCoordinateAttribute;
-    GLint colorSwizzlingInputTextureUniform;
+    GPUImageUniform colorSwizzlingInputTextureUniform;
 
     GPUImageFramebuffer *firstInputFramebuffer;
 }
@@ -270,7 +270,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     
 	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, [firstInputFramebuffer texture]);
-	glUniform1i(colorSwizzlingInputTextureUniform, 4);	
+	GPUImageglUniform1i(colorSwizzlingInputTextureUniform, 4);	
     
     glVertexAttribPointer(colorSwizzlingPositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
 	glVertexAttribPointer(colorSwizzlingTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);

@@ -83,13 +83,13 @@ static void *openGLESContextQueueKey;
     }
 }
 
-+ (void)setActiveShaderProgram:(GLProgram *)shaderProgram;
++ (void)setActiveShaderProgram:(GPUImageGLProgram *)shaderProgram;
 {
     GPUImageContext *sharedContext = [GPUImageContext sharedImageProcessingContext];
     [sharedContext setContextShaderProgram:shaderProgram];
 }
 
-- (void)setContextShaderProgram:(GLProgram *)shaderProgram;
+- (void)setContextShaderProgram:(GPUImageGLProgram *)shaderProgram;
 {
     EAGLContext *imageProcessingContext = [self context];
     if ([EAGLContext currentContext] != imageProcessingContext)
@@ -213,14 +213,14 @@ static void *openGLESContextQueueKey;
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
-- (GLProgram *)programForVertexShaderString:(NSString *)vertexShaderString fragmentShaderString:(NSString *)fragmentShaderString;
+- (GPUImageGLProgram *)programForVertexShaderString:(NSString *)vertexShaderString fragmentShaderString:(NSString *)fragmentShaderString;
 {
     NSString *lookupKeyForShaderProgram = [NSString stringWithFormat:@"V: %@ - F: %@", vertexShaderString, fragmentShaderString];
-    GLProgram *programFromCache = [shaderProgramCache objectForKey:lookupKeyForShaderProgram];
+    GPUImageGLProgram *programFromCache = [shaderProgramCache objectForKey:lookupKeyForShaderProgram];
 
     if (programFromCache == nil)
     {
-        programFromCache = [[GLProgram alloc] initWithVertexShaderString:vertexShaderString fragmentShaderString:fragmentShaderString];
+        programFromCache = [[GPUImageGLProgram alloc] initWithVertexShaderString:vertexShaderString fragmentShaderString:fragmentShaderString];
         [shaderProgramCache setObject:programFromCache forKey:lookupKeyForShaderProgram];
 //        [shaderProgramUsageHistory addObject:lookupKeyForShaderProgram];
 //        if ([shaderProgramUsageHistory count] >= MAXSHADERPROGRAMSALLOWEDINCACHE)

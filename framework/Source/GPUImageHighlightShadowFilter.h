@@ -2,7 +2,7 @@
 
 @interface GPUImageHighlightShadowFilter : GPUImageFilter
 {
-    GLint shadowsUniform, highlightsUniform;
+    GPUImageUniform shadowsUniform, highlightsUniform;
 }
 
 /**

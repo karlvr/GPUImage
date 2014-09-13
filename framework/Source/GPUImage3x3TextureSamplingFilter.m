@@ -87,13 +87,13 @@ NSString *const kGPUImageNearbyTexelSamplingVertexShaderString = SHADER_STRING
             [GPUImageContext setActiveShaderProgram:filterProgram];
             if (GPUImageRotationSwapsWidthAndHeight(inputRotation))
             {
-                glUniform1f(texelWidthUniform, _texelHeight);
-                glUniform1f(texelHeightUniform, _texelWidth);
+                GPUImageglUniform1f(texelWidthUniform, _texelHeight);
+                GPUImageglUniform1f(texelHeightUniform, _texelWidth);
             }
             else
             {
-                glUniform1f(texelWidthUniform, _texelWidth);
-                glUniform1f(texelHeightUniform, _texelHeight);
+                GPUImageglUniform1f(texelWidthUniform, _texelWidth);
+                GPUImageglUniform1f(texelHeightUniform, _texelHeight);
             }
         });
     }

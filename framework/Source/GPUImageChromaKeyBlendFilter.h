@@ -4,7 +4,7 @@
  */
 @interface GPUImageChromaKeyBlendFilter : GPUImageTwoInputFilter
 {
-    GLint colorToReplaceUniform, thresholdSensitivityUniform, smoothingUniform;
+    GPUImageUniform colorToReplaceUniform, thresholdSensitivityUniform, smoothingUniform;
 }
 
 /** The threshold sensitivity controls how similar pixels need to be colored to be replaced

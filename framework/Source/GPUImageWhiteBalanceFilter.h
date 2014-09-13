@@ -6,7 +6,7 @@
  */
 @interface GPUImageWhiteBalanceFilter : GPUImageFilter
 {
-    GLint temperatureUniform, tintUniform;
+    GPUImageUniform temperatureUniform, tintUniform;
 }
 //choose color temperature, in degrees Kelvin
 @property(readwrite, nonatomic) CGFloat temperature;

@@ -2,7 +2,7 @@
 
 @interface GPUImageColorPackingFilter : GPUImageFilter
 {
-    GLint texelWidthUniform, texelHeightUniform;
+    GPUImageUniform texelWidthUniform, texelHeightUniform;
     
     CGFloat texelWidth, texelHeight;
 }

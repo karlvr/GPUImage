@@ -4,7 +4,7 @@
  */
 @interface GPUImage3x3ConvolutionFilter : GPUImage3x3TextureSamplingFilter
 {
-    GLint convolutionMatrixUniform;
+    GPUImageUniform convolutionMatrixUniform;
 }
 
 /** Convolution kernel to run against the image

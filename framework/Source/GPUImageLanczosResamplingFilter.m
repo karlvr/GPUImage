@@ -192,7 +192,7 @@ NSString *const kGPUImageLanczosFragmentShaderString = SHADER_STRING
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, [firstInputFramebuffer texture]);
 	
-	glUniform1i(filterInputTextureUniform, 2);
+	GPUImageglUniform1i(filterInputTextureUniform, 2);
     
     glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
 	glVertexAttribPointer(filterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
@@ -220,7 +220,7 @@ NSString *const kGPUImageLanczosFragmentShaderString = SHADER_STRING
     glBindTexture(GL_TEXTURE_2D, [outputFramebuffer texture]);
     glVertexAttribPointer(secondFilterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [[self class] textureCoordinatesForRotation:kGPUImageNoRotation]);
     
-	glUniform1i(secondFilterInputTextureUniform, 3);
+	GPUImageglUniform1i(secondFilterInputTextureUniform, 3);
     
     glVertexAttribPointer(secondFilterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
     

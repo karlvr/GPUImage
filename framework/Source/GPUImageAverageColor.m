@@ -148,10 +148,10 @@ NSString *const kGPUImageColorAveragingFragmentShaderString = SHADER_STRING
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, currentTexture);
         
-        glUniform1i(filterInputTextureUniform, 2);
+        GPUImageglUniform1i(filterInputTextureUniform, 2);
         
-        glUniform1f(texelWidthUniform, 0.5 / currentStageSize.width);
-        glUniform1f(texelHeightUniform, 0.5 / currentStageSize.height);
+        GPUImageglUniform1f(texelWidthUniform, 0.5 / currentStageSize.width);
+        GPUImageglUniform1f(texelHeightUniform, 0.5 / currentStageSize.height);
         
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 

@@ -1,4 +1,4 @@
-#import "GLProgram.h"
+#import "GPUImageGLProgram.h"
 
 // Base classes
 #import "GPUImageContext.h"

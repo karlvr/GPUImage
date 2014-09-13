@@ -103,7 +103,7 @@
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, [firstInputFramebuffer texture]);
 	
-	glUniform1i(filterInputTextureUniform, 2);
+	GPUImageglUniform1i(filterInputTextureUniform, 2);
     
     glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
 	glVertexAttribPointer(filterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
@@ -149,7 +149,7 @@
 //        glVertexAttribPointer(secondFilterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
 //    }
     
-	glUniform1i(secondFilterInputTextureUniform, 3);
+	GPUImageglUniform1i(secondFilterInputTextureUniform, 3);
     
     glVertexAttribPointer(secondFilterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
 
@@ -166,16 +166,16 @@
     }
 }
 
-- (void)setAndExecuteUniformStateCallbackAtIndex:(GLint)uniform forProgram:(GLProgram *)shaderProgram toBlock:(dispatch_block_t)uniformStateBlock;
+- (void)setAndExecuteUniformStateCallbackAtIndex:(GPUImageUniform)uniform forProgram:(GPUImageGLProgram *)shaderProgram toBlock:(dispatch_block_t)uniformStateBlock;
 {
 // TODO: Deal with the fact that two-pass filters may have the same shader program identifier
     if (shaderProgram == filterProgram)
     {
-        [uniformStateRestorationBlocks setObject:[uniformStateBlock copy] forKey:[NSNumber numberWithInt:uniform]];
+        [uniformStateRestorationBlocks setObject:[uniformStateBlock copy] forKey:[NSValue valueWithGPUImageUniform:uniform]];
     }
     else
     {
-        [secondProgramUniformStateRestorationBlocks setObject:[uniformStateBlock copy] forKey:[NSNumber numberWithInt:uniform]];
+        [secondProgramUniformStateRestorationBlocks setObject:[uniformStateBlock copy] forKey:[NSValue valueWithGPUImageUniform:uniform]];
     }
     uniformStateBlock();
 }

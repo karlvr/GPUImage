@@ -6,8 +6,8 @@
 
 @interface GPUImageSolidColorGenerator : GPUImageFilter
 {
-    GLint colorUniform;
-    GLint useExistingAlphaUniform;
+    GPUImageUniform colorUniform;
+    GPUImageUniform useExistingAlphaUniform;
 }
 
 // This color dictates what the output image will be filled with

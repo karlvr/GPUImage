@@ -1,7 +1,7 @@
 #import "GPUImageRawDataOutput.h"
 
 #import "GPUImageContext.h"
-#import "GLProgram.h"
+#import "GPUImageGLProgram.h"
 #import "GPUImageFilter.h"
 #import "GPUImageMovieWriter.h"
 
@@ -11,9 +11,9 @@
     
     BOOL hasReadFromTheCurrentFrame;
     
-    GLProgram *dataProgram;
+    GPUImageGLProgram *dataProgram;
     GLint dataPositionAttribute, dataTextureCoordinateAttribute;
-    GLint dataInputTextureUniform;
+    GPUImageUniform dataInputTextureUniform;
     
     GLubyte *_rawBytesForImage;
     
@@ -130,7 +130,7 @@
     
 	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, [firstInputFramebuffer texture]);
-	glUniform1i(dataInputTextureUniform, 4);	
+	GPUImageglUniform1i(dataInputTextureUniform, 4);	
     
     glVertexAttribPointer(dataPositionAttribute, 2, GL_FLOAT, 0, 0, squareVertices);
 	glVertexAttribPointer(dataTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);

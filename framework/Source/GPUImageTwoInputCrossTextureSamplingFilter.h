@@ -2,7 +2,7 @@
 
 @interface GPUImageTwoInputCrossTextureSamplingFilter : GPUImageTwoInputFilter
 {
-    GLint texelWidthUniform, texelHeightUniform;
+    GPUImageUniform texelWidthUniform, texelHeightUniform;
     
     CGFloat texelWidth, texelHeight;
     BOOL hasOverriddenImageSizeFactor;

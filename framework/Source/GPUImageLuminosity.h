@@ -2,10 +2,10 @@
 
 @interface GPUImageLuminosity : GPUImageAverageColor
 {
-    GLProgram *secondFilterProgram;
+    GPUImageGLProgram *secondFilterProgram;
     GLint secondFilterPositionAttribute, secondFilterTextureCoordinateAttribute;
-    GLint secondFilterInputTextureUniform, secondFilterInputTextureUniform2;
-    GLint secondFilterTexelWidthUniform, secondFilterTexelHeightUniform;
+    GPUImageUniform secondFilterInputTextureUniform, secondFilterInputTextureUniform2;
+    GPUImageUniform secondFilterTexelWidthUniform, secondFilterTexelHeightUniform;
 }
 
 // This block is called on the completion of color averaging for a frame

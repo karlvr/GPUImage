@@ -2,7 +2,7 @@
 
 @interface GPUImageLineGenerator : GPUImageFilter
 {
-    GLint lineWidthUniform, lineColorUniform;
+    GPUImageUniform lineWidthUniform, lineColorUniform;
     GLfloat *lineCoordinates;
 }
 

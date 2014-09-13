@@ -2,7 +2,7 @@
 
 @interface GPUImageMonochromeFilter : GPUImageFilter
 {
-    GLint intensityUniform, filterColorUniform;
+    GPUImageUniform intensityUniform, filterColorUniform;
 }
 
 @property(readwrite, nonatomic) CGFloat intensity;

@@ -7,7 +7,7 @@ extern NSString *const kGPUImageThreeInputTextureVertexShaderString;
     GPUImageFramebuffer *thirdInputFramebuffer;
 
     GLint filterThirdTextureCoordinateAttribute;
-    GLint filterInputTextureUniform3;
+    GPUImageUniform filterInputTextureUniform3;
     GPUImageRotationMode inputRotation3;
     GLuint filterSourceTexture3;
     CMTime thirdFrameTime;

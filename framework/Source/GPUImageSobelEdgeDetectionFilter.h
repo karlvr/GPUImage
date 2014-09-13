@@ -2,7 +2,7 @@
 
 @interface GPUImageSobelEdgeDetectionFilter : GPUImageTwoPassFilter
 {
-    GLint texelWidthUniform, texelHeightUniform, edgeStrengthUniform;
+    GPUImageUniform texelWidthUniform, texelHeightUniform, edgeStrengthUniform;
     BOOL hasOverriddenImageSizeFactor;
 }
 

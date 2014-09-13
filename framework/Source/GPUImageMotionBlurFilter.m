@@ -122,7 +122,7 @@ NSString *const kGPUImageMotionBlurFragmentShaderString = SHADER_STRING
 
 @interface GPUImageMotionBlurFilter()
 {
-    GLint directionalTexelStepUniform;
+    GPUImageUniform directionalTexelStepUniform;
 }
 
 - (void)recalculateTexelOffsets;

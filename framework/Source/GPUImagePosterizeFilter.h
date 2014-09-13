@@ -4,7 +4,7 @@
  */
 @interface GPUImagePosterizeFilter : GPUImageFilter
 {
-    GLint colorLevelsUniform;
+    GPUImageUniform colorLevelsUniform;
 }
 
 /** The number of color levels to reduce the image space to. This ranges from 1 to 256, with a default of 10.

@@ -2,7 +2,7 @@
 
 @interface GPUImageCrosshairGenerator : GPUImageFilter
 {
-    GLint crosshairWidthUniform, crosshairColorUniform;
+    GPUImageUniform crosshairWidthUniform, crosshairColorUniform;
 }
 
 // The width of the displayed crosshairs, in pixels. Currently this only works well for odd widths. The default is 5.

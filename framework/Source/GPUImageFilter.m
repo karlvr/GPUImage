@@ -313,7 +313,7 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, [firstInputFramebuffer texture]);
 	
-	glUniform1i(filterInputTextureUniform, 2);	
+	GPUImageglUniform1i(filterInputTextureUniform, 2);
 
     glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
 	glVertexAttribPointer(filterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
@@ -390,78 +390,77 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
 
 - (void)setInteger:(GLint)newInteger forUniformName:(NSString *)uniformName;
 {
-    GLint uniformIndex = [filterProgram uniformIndex:uniformName];
+    GPUImageUniform uniformIndex = [filterProgram uniformIndex:uniformName];
     [self setInteger:newInteger forUniform:uniformIndex program:filterProgram];
 }
 
 - (void)setFloat:(GLfloat)newFloat forUniformName:(NSString *)uniformName;
 {
-    GLint uniformIndex = [filterProgram uniformIndex:uniformName];
+    GPUImageUniform uniformIndex = [filterProgram uniformIndex:uniformName];
     [self setFloat:newFloat forUniform:uniformIndex program:filterProgram];
 }
 
 - (void)setSize:(CGSize)newSize forUniformName:(NSString *)uniformName;
 {
-    GLint uniformIndex = [filterProgram uniformIndex:uniformName];
+    GPUImageUniform uniformIndex = [filterProgram uniformIndex:uniformName];
     [self setSize:newSize forUniform:uniformIndex program:filterProgram];
 }
 
 - (void)setPoint:(CGPoint)newPoint forUniformName:(NSString *)uniformName;
 {
-    GLint uniformIndex = [filterProgram uniformIndex:uniformName];
+    GPUImageUniform uniformIndex = [filterProgram uniformIndex:uniformName];
     [self setPoint:newPoint forUniform:uniformIndex program:filterProgram];
 }
 
 - (void)setFloatVec3:(GPUVector3)newVec3 forUniformName:(NSString *)uniformName;
 {
-    GLint uniformIndex = [filterProgram uniformIndex:uniformName];
+    GPUImageUniform uniformIndex = [filterProgram uniformIndex:uniformName];
     [self setVec3:newVec3 forUniform:uniformIndex program:filterProgram];
 }
 
 - (void)setFloatVec4:(GPUVector4)newVec4 forUniform:(NSString *)uniformName;
 {
-    GLint uniformIndex = [filterProgram uniformIndex:uniformName];
+    GPUImageUniform uniformIndex = [filterProgram uniformIndex:uniformName];
     [self setVec4:newVec4 forUniform:uniformIndex program:filterProgram];
 }
 
 - (void)setFloatArray:(GLfloat *)array length:(GLsizei)count forUniform:(NSString*)uniformName
 {
-    GLint uniformIndex = [filterProgram uniformIndex:uniformName];
-    
+    GPUImageUniform uniformIndex = [filterProgram uniformIndex:uniformName];
     [self setFloatArray:array length:count forUniform:uniformIndex program:filterProgram];
 }
 
-- (void)setMatrix3f:(GPUMatrix3x3)matrix forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setMatrix3f:(GPUMatrix3x3)matrix forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:shaderProgram];
         [self setAndExecuteUniformStateCallbackAtIndex:uniform forProgram:shaderProgram toBlock:^{
-            glUniformMatrix3fv(uniform, 1, GL_FALSE, (GLfloat *)&matrix);
+            GPUImageglUniformMatrix3fv(uniform, 1, GL_FALSE, (GLfloat *)&matrix);
         }];
     });
 }
 
-- (void)setMatrix4f:(GPUMatrix4x4)matrix forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setMatrix4f:(GPUMatrix4x4)matrix forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:shaderProgram];
         [self setAndExecuteUniformStateCallbackAtIndex:uniform forProgram:shaderProgram toBlock:^{
-            glUniformMatrix4fv(uniform, 1, GL_FALSE, (GLfloat *)&matrix);
+            GPUImageglUniformMatrix4fv(uniform, 1, GL_FALSE, (GLfloat *)&matrix);
         }];
     });
 }
 
-- (void)setFloat:(GLfloat)floatValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setFloat:(GLfloat)floatValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:shaderProgram];
         [self setAndExecuteUniformStateCallbackAtIndex:uniform forProgram:shaderProgram toBlock:^{
-            glUniform1f(uniform, floatValue);
+            GPUImageglUniform1f(uniform, floatValue);
         }];
     });
 }
 
-- (void)setPoint:(CGPoint)pointValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setPoint:(CGPoint)pointValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:shaderProgram];
@@ -470,12 +469,12 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
             positionArray[0] = pointValue.x;
             positionArray[1] = pointValue.y;
             
-            glUniform2fv(uniform, 1, positionArray);
+            GPUImageglUniform2fv(uniform, 1, positionArray);
         }];
     });
 }
 
-- (void)setSize:(CGSize)sizeValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setSize:(CGSize)sizeValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:shaderProgram];
@@ -485,34 +484,34 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
             sizeArray[0] = sizeValue.width;
             sizeArray[1] = sizeValue.height;
             
-            glUniform2fv(uniform, 1, sizeArray);
+            GPUImageglUniform2fv(uniform, 1, sizeArray);
         }];
     });
 }
 
-- (void)setVec3:(GPUVector3)vectorValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setVec3:(GPUVector3)vectorValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:shaderProgram];
 
         [self setAndExecuteUniformStateCallbackAtIndex:uniform forProgram:shaderProgram toBlock:^{
-            glUniform3fv(uniform, 1, (GLfloat *)&vectorValue);
+            GPUImageglUniform3fv(uniform, 1, (GLfloat *)&vectorValue);
         }];
     });
 }
 
-- (void)setVec4:(GPUVector4)vectorValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setVec4:(GPUVector4)vectorValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:shaderProgram];
         
         [self setAndExecuteUniformStateCallbackAtIndex:uniform forProgram:shaderProgram toBlock:^{
-            glUniform4fv(uniform, 1, (GLfloat *)&vectorValue);
+            GPUImageglUniform4fv(uniform, 1, (GLfloat *)&vectorValue);
         }];
     });
 }
 
-- (void)setFloatArray:(GLfloat *)arrayValue length:(GLsizei)arrayLength forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setFloatArray:(GLfloat *)arrayValue length:(GLsizei)arrayLength forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     // Make a copy of the data, so it doesn't get overwritten before async call executes
     NSData* arrayData = [NSData dataWithBytes:arrayValue length:arrayLength * sizeof(arrayValue[0])];
@@ -521,25 +520,25 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
         [GPUImageContext setActiveShaderProgram:shaderProgram];
         
         [self setAndExecuteUniformStateCallbackAtIndex:uniform forProgram:shaderProgram toBlock:^{
-            glUniform1fv(uniform, arrayLength, [arrayData bytes]);
+            GPUImageglUniform1fv(uniform, arrayLength, [arrayData bytes]);
         }];
     });
 }
 
-- (void)setInteger:(GLint)intValue forUniform:(GLint)uniform program:(GLProgram *)shaderProgram;
+- (void)setInteger:(GLint)intValue forUniform:(GPUImageUniform)uniform program:(GPUImageGLProgram *)shaderProgram;
 {
     runAsynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:shaderProgram];
 
         [self setAndExecuteUniformStateCallbackAtIndex:uniform forProgram:shaderProgram toBlock:^{
-            glUniform1i(uniform, intValue);
+            GPUImageglUniform1i(uniform, intValue);
         }];
     });
 }
 
-- (void)setAndExecuteUniformStateCallbackAtIndex:(GLint)uniform forProgram:(GLProgram *)shaderProgram toBlock:(dispatch_block_t)uniformStateBlock;
+- (void)setAndExecuteUniformStateCallbackAtIndex:(GPUImageUniform)uniform forProgram:(GPUImageGLProgram *)shaderProgram toBlock:(dispatch_block_t)uniformStateBlock;
 {
-    [uniformStateRestorationBlocks setObject:[uniformStateBlock copy] forKey:[NSNumber numberWithInt:uniform]];
+    [uniformStateRestorationBlocks setObject:[uniformStateBlock copy] forKey:[NSValue valueWithGPUImageUniform:uniform]];
     uniformStateBlock();
 }
 

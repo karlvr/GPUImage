@@ -60,7 +60,7 @@ NSString *const kGPUImageZoomBlurFragmentShaderString = SHADER_STRING
 
 @interface GPUImageZoomBlurFilter()
 {
-    GLint blurSizeUniform, blurCenterUniform;
+    GPUImageUniform blurSizeUniform, blurCenterUniform;
 }
 @end
 

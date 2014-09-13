@@ -4,8 +4,8 @@
  */
 @interface GPUImageColorMatrixFilter : GPUImageFilter
 {
-    GLint colorMatrixUniform;
-    GLint intensityUniform;
+    GPUImageUniform colorMatrixUniform;
+    GPUImageUniform intensityUniform;
 }
 
 /** A 4x4 matrix used to transform each color in an image

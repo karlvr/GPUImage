@@ -2,7 +2,7 @@
 
 @interface GPUImageVoronoiConsumerFilter : GPUImageTwoInputFilter 
 {
-    GLint sizeUniform;
+    GPUImageUniform sizeUniform;
 }
 
 @property (nonatomic, readwrite) CGSize sizeInPixels;

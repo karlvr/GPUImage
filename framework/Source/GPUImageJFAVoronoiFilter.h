@@ -6,8 +6,8 @@
     GLuint secondFilterFramebuffer;
     
     
-    GLint sampleStepUniform;
-    GLint sizeUniform;
+    GPUImageUniform sampleStepUniform;
+    GPUImageUniform sizeUniform;
     NSUInteger numPasses;
     
 }
