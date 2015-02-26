@@ -59,10 +59,16 @@ NSString *const kGPUSolidColorFragmentShaderString = SHADER_STRING
         return;
     }
     
+    CGSize fboSize = [self sizeOfFBO];
+    
+    if (CGSizeEqualToSize(fboSize, CGSizeZero)) {
+        return;
+    }
+    
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext setActiveShaderProgram:filterProgram];
         
-        outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:[self sizeOfFBO] textureOptions:self.outputTextureOptions onlyTexture:NO];
+        outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:fboSize textureOptions:self.outputTextureOptions onlyTexture:NO];
         [outputFramebuffer activateFramebuffer];
         
         glClearColor(_color.one, _color.two, _color.three, _color.four);
