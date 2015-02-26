@@ -80,7 +80,9 @@ NSString *const kGPUSolidColorFragmentShaderString = SHADER_STRING
 
     if (!CGSizeEqualToSize(inputTextureSize, CGSizeZero))
     {
-        [self newFrameReadyAtTime:kCMTimeIndefinite atIndex:0];
+        runAsynchronouslyOnVideoProcessingQueue(^{
+            [self newFrameReadyAtTime:kCMTimeIndefinite atIndex:0];
+        });
     }
 }
 
@@ -108,9 +110,11 @@ NSString *const kGPUSolidColorFragmentShaderString = SHADER_STRING
     _color.four = (GLfloat)alphaComponent;
     
 //    [self setVec4:_color forUniform:colorUniform program:filterProgram];
-    runAsynchronouslyOnVideoProcessingQueue(^{
-        [self newFrameReadyAtTime:kCMTimeIndefinite atIndex:0];
-    });
+    if (!CGSizeEqualToSize([self sizeOfFBO], CGSizeZero)) {
+        runAsynchronouslyOnVideoProcessingQueue(^{
+            [self newFrameReadyAtTime:kCMTimeIndefinite atIndex:0];
+        });
+    }
 }
 
 - (void)setUseExistingAlpha:(BOOL)useExistingAlpha;
